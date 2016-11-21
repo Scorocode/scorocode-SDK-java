@@ -51,7 +51,7 @@ import ru.profit_group.scorocode_sdk.Requests.user.RequestLoginUser;
 import ru.profit_group.scorocode_sdk.Requests.user.RequestLogoutUser;
 import ru.profit_group.scorocode_sdk.Requests.user.RequestRegisterUser;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestRemove;
-import ru.profit_group.scorocode_sdk.Requests.statistic.RequestStatistic;
+import ru.profit_group.scorocode_sdk.Requests.application.RequestStatistic;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.ResponseString;
