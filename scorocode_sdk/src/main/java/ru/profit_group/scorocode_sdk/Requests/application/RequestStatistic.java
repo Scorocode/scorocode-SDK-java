@@ -1,4 +1,4 @@
-package ru.profit_group.scorocode_sdk.Requests.statistic;
+package ru.profit_group.scorocode_sdk.Requests.application;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
