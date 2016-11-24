@@ -13,16 +13,16 @@ import ru.profit_group.scorocode_sdk.Requests.bots.RequestCreateBot;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestDeleteBot;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestGetBotsList;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestUpdateBot;
-import ru.profit_group.scorocode_sdk.Requests.collection.RequestAddFieldInCollection;
+import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCloneCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
-import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollction;
-import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollectionIndex;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
+import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection;
-import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteFieldFromCollection;
-import ru.profit_group.scorocode_sdk.Requests.collection.RequestRemoveCollectionIndex;
+import ru.profit_group.scorocode_sdk.Requests.fields.RequestDeleteField;
+import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestFind;
@@ -31,13 +31,13 @@ import ru.profit_group.scorocode_sdk.Requests.files.RequestFile;
 import ru.profit_group.scorocode_sdk.Requests.files.RequestUpload;
 import ru.profit_group.scorocode_sdk.Requests.folders.RequestCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Requests.folders.RequestDeleteFolder;
-import ru.profit_group.scorocode_sdk.Requests.folders.RequestPathToFoldersAndScripts;
+import ru.profit_group.scorocode_sdk.Requests.folders.RequestFoldersList;
 import ru.profit_group.scorocode_sdk.Requests.messages.RequestSendEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.RequestSendPush;
 import ru.profit_group.scorocode_sdk.Requests.messages.RequestSendSms;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestCreateScript;
-import ru.profit_group.scorocode_sdk.Requests.scripts.RequestDeleteScript;
-import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScript;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestDeleteScriptById;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScriptById;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestSendScriptTask;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestUpdateScript;
 import ru.profit_group.scorocode_sdk.Requests.user.RequestLoginUser;
@@ -154,7 +154,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/create")
-    Call<ResponseCodes> createCollection(@Body RequestCreateCollction requestCreateCollection);
+    Call<ResponseCodes> createCollection(@Body RequestCreateCollection requestCreateCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/update")
@@ -174,16 +174,16 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/index/delete")
-    Call<ResponseCodes> removeCollectionsIndex(@Body RequestRemoveCollectionIndex requestCreateCollectionIndex);
+    Call<ResponseCodes> removeCollectionsIndex(@Body RequestDeleteCollectionIndex requestCreateCollectionIndex);
 
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/create")
-    Call<ResponseCodes> addFieldInCollection(@Body RequestAddFieldInCollection requestAddFieldInCollection);
+    Call<ResponseCodes> addFieldInCollection(@Body RequestCreateField requestAddFieldInCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/delete")
-    Call<ResponseCodes> deleteFieldFromCollection(@Body RequestDeleteFieldFromCollection requestDeleteFieldFromCollection);
+    Call<ResponseCodes> deleteFieldFromCollection(@Body RequestDeleteField requestDeleteFieldFromCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/triggers")
@@ -192,7 +192,7 @@ public interface ScorocodeApi {
     //Folder methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/folders")
-    Call<ResponseCodes> getPathToFoldersAndScripts(@Body RequestPathToFoldersAndScripts requestPathToFoldersAndScripts);
+    Call<ResponseCodes> getPathToFoldersAndScripts(@Body RequestFoldersList requestPathToFoldersAndScripts);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/folders/create")
@@ -205,7 +205,7 @@ public interface ScorocodeApi {
     //Script methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/get")
-    Call<ResponseCodes> getScript(@Body RequestGetScript requestGetScript);
+    Call<ResponseCodes> getScript(@Body RequestGetScriptById requestGetScript);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/create")
@@ -217,7 +217,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/delete")
-    Call<ResponseCodes> deleteScript(@Body RequestDeleteScript requestDeleteScript);
+    Call<ResponseCodes> deleteScript(@Body RequestDeleteScriptById requestDeleteScript);
 
     //Bot methods
     @Headers({"Content-Type: application/json"})

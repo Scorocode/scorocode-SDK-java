@@ -2,6 +2,7 @@ package ru.profit_group.scorocode_sdk.Requests.collection;
 
 import ru.profit_group.scorocode_sdk.Requests.application.AppBase;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 /**
  * Created by Peter Staranchuk on 11/21/16
@@ -10,8 +11,8 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 public class RequestDeleteCollection extends AppBase {
     private ScorocodeCollection collection;
 
-    public RequestDeleteCollection(String masterKey, String applicationId, ScorocodeCollection collection) {
-        super(masterKey, applicationId);
+    public RequestDeleteCollection(ScorocodeSdkStateHolder stateHolder, ScorocodeCollection collection) {
+        super(stateHolder);
         this.collection = collection;
     }
 }

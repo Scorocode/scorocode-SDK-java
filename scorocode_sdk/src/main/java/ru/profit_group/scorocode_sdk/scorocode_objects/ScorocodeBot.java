@@ -13,6 +13,7 @@ public class ScorocodeBot {
     private boolean isActive;
 
     public ScorocodeBot(String botId, String botName, String telegramBotId, String scriptId, boolean isActive) {
+        this._id = botId;
         this.name = botName;
         this.botId = telegramBotId;
         this.scriptId = scriptId;

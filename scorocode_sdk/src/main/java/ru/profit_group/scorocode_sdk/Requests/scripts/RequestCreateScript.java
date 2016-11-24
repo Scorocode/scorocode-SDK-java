@@ -4,6 +4,8 @@ import java.util.List;
 
 import ru.profit_group.scorocode_sdk.Requests.application.AppBase;
 import ru.profit_group.scorocode_sdk.scorocode_objects.CloudCode;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 /**
  * Created by Peter Staranchuk on 11/21/16
@@ -12,10 +14,10 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.CloudCode;
 public class RequestCreateScript extends AppBase {
 
     private CloudCode cloudCode;
-    private List<String> ACL;
+    private ScorocodeACL ACL;
 
-    public RequestCreateScript(String masterKey, String applicationId, CloudCode cloudCode, List<String> ACL) {
-        super(masterKey, applicationId);
+    public RequestCreateScript(ScorocodeSdkStateHolder stateHolder, CloudCode cloudCode, ScorocodeACL ACL) {
+        super(stateHolder);
         this.cloudCode = cloudCode;
         this.ACL = ACL;
     }

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.Requests.application.AppBase;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Trigger;
 
 /**
@@ -13,46 +15,11 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Trigger;
 public class RequestChangeCollectionTriggers extends AppBase {
 
     private String coll;
-    private Map<String, Trigger> triggers;
+    private ScorocodeTriggers triggers;
 
-    public RequestChangeCollectionTriggers(String masterKey, String applicationId, String collectionName) {
-        super(masterKey, applicationId);
+    public RequestChangeCollectionTriggers(ScorocodeSdkStateHolder stateHolder, String collectionName, ScorocodeTriggers triggers) {
+        super(stateHolder);
         this.coll = collectionName;
-        triggers = new HashMap<>();
-    }
-
-    public RequestChangeCollectionTriggers setBeforeTrigger(String code, boolean isActive) {
-        setTrigger("beforeInsert", code, isActive);
-        return this;
-    }
-
-    public RequestChangeCollectionTriggers setAfterTrigger(String code, boolean isActive) {
-        setTrigger("afterInsert", code, isActive);
-        return this;
-    }
-
-    public RequestChangeCollectionTriggers setBeforeUpdateTrigger(String code, boolean isActive) {
-        setTrigger("beforeUpdate", code, isActive);
-        return this;
-    }
-
-    public RequestChangeCollectionTriggers setAfterUpdateTrigger(String code, boolean isActive) {
-        setTrigger("afterUpdate", code, isActive);
-        return this;
-    }
-
-    public RequestChangeCollectionTriggers setBeforeRemoveTrigger(String code, boolean isActive) {
-        setTrigger("beforeRemove", code, isActive);
-        return this;
-    }
-
-    public RequestChangeCollectionTriggers setAfterRemoveTrigger(String code, boolean isActive) {
-        setTrigger("afterRemove", code, isActive);
-        return this;
-    }
-
-    private RequestChangeCollectionTriggers setTrigger(String triggerName, String code, boolean isActive) {
-        triggers.put(triggerName, new Trigger(code, isActive));
-        return this;
+        this.triggers = triggers;
     }
 }
