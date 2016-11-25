@@ -1,5 +1,7 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,7 +73,7 @@ public class ScorocodeApplicationInfo {
         return appId;
     }
 
-    public String getName() {
+    public String getApplicationName() {
         return name;
     }
 
@@ -91,8 +93,12 @@ public class ScorocodeApplicationInfo {
         return limits;
     }
 
-    public Map<String, ScorocodeCollection> getCollections() {
-        return schemas;
+    public List<ScorocodeCollection> getCollections() {
+        List<ScorocodeCollection> scorocodeCollectionList = new ArrayList<>();
+        for(String key : schemas.keySet()) {
+            scorocodeCollectionList.add(schemas.get(key));
+        }
+        return scorocodeCollectionList;
     }
 
     public ScorocodePublicKeys getAccessKeys() {

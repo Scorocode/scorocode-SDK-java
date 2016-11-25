@@ -1,6 +1,6 @@
 package ru.profit_group.scorocode_sdk.Requests.application;
 
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 /**
  * Created by Peter Staranchuk on 11/21/16
@@ -11,9 +11,9 @@ public class AppBase {
     protected String app;
     protected String cli;
 
-    public AppBase(ScorocodeSdkStateHolder stateHolder) {
+    public AppBase(ScorocodeCoreInfo stateHolder) {
         this.acc = stateHolder.getMasterKey();
         this.app = stateHolder.getApplicationId();
-        this.app = stateHolder.getClientKey();
+        this.cli = stateHolder.getClientKey();
     }
 }

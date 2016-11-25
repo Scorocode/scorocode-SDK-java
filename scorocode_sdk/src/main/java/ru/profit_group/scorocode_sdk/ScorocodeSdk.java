@@ -3,6 +3,7 @@ package ru.profit_group.scorocode_sdk;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackInsert;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
@@ -26,9 +28,11 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
+import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
+import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
@@ -36,7 +40,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.NetworkHelper;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestFind;
@@ -73,7 +77,7 @@ public class ScorocodeSdk {
     public static final String ERROR_MESSAGE_GENERAL = "server not answered on request";
     public static final String ERROR_CODE_GENERAL = "-1";
 
-    private static ScorocodeSdkStateHolder stateHolder;
+    private static ScorocodeCoreInfo stateHolder;
     private static ScorocodeApiComponent scorocodeApiComponent;
     /**
      * Init Scorocode sdk with Keys
@@ -88,7 +92,7 @@ public class ScorocodeSdk {
             @Nullable String webSocket) {
 
         scorocodeApiComponent = DaggerScorocodeApiComponent.builder().build();
-        stateHolder = new ScorocodeSdkStateHolder(applicationId, clientKey, masterKey, fileKey, messageKey, scriptKey, webSocket);
+        stateHolder = new ScorocodeCoreInfo(applicationId, clientKey, masterKey, fileKey, messageKey, scriptKey, webSocket);
     }
 
     /**
@@ -724,6 +728,30 @@ public class ScorocodeSdk {
             }
         }.execute();
 
+    }
+
+    public static void getApplicationInfo(final CallbackGetApplicationInfo callbackGetApplicationInfo) {
+        Call<ResponseAppInfo> appInfoCall = getScorocodeApi().getApplicationInfo(new RequestAppInfo(stateHolder));
+        appInfoCall.enqueue(new Callback<ResponseAppInfo>() {
+            @Override
+            public void onResponse(Call<ResponseAppInfo> call, Response<ResponseAppInfo> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackGetApplicationInfo.onRequestSucceed(response.body().getApplicationInfo());
+                    } else {
+                        callbackGetApplicationInfo.onRequestFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackGetApplicationInfo.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseAppInfo> call, Throwable t) {
+                callbackGetApplicationInfo.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+            }
+        });
     }
 
     private static ScorocodeApi getScorocodeApi() {
