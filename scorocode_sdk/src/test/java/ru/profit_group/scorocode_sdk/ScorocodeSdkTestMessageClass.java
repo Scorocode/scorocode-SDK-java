@@ -22,9 +22,6 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Message;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.User;
 
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.APP_ID;
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.CLIENT_KEY;
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.MASTER_KEY;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.printError;
 
 /**
@@ -35,7 +32,7 @@ import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.printError;
 public class ScorocodeSdkTestMessageClass {
     @BeforeClass
     public static void setUp() throws Exception {
-        ScorocodeSdk.initWith(APP_ID, CLIENT_KEY, MASTER_KEY, null, null, null, null);
+        ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
 
         removeTestUsers();
     }

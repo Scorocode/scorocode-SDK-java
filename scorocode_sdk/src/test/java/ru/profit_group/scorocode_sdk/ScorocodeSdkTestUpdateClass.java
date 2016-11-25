@@ -20,10 +20,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Update;
 
 import static org.junit.Assert.fail;
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.APP_ID;
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.CLIENT_KEY;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.DATE_FIELD_1;
-import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.MASTER_KEY;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.NUMBER_FIELD_1;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.TEST_COLLECTION_NAME;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.TEXT_FIELD_1;
@@ -38,7 +35,7 @@ public class ScorocodeSdkTestUpdateClass {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        ScorocodeSdk.initWith(APP_ID, CLIENT_KEY, MASTER_KEY, null, null, null, null);
+        ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
 
         createTestDocument();
     }
