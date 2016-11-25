@@ -6,8 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
-import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 
 /**
@@ -22,7 +21,7 @@ public class RequestCount {
     private Map<String, Object> query;
 
     public RequestCount(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @Nullable Query query) {
         this.app = stateHolder.getApplicationId();

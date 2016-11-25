@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.HashMap;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 /**
  * Created by Peter Staranchuk on 5/10/16
@@ -20,7 +20,7 @@ public class RequestInsert {
     private HashMap<String, Object> doc;
 
     public RequestInsert(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String collectionName,
             @Nullable DocumentInfo doc) {
         this.app = stateHolder.getApplicationId();

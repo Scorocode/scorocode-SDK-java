@@ -1,13 +1,12 @@
 package ru.profit_group.scorocode_sdk.Requests.data;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.UpdateInfo;
 
 /**
@@ -23,7 +22,7 @@ public class RequestUpdateById {
     private Map<String, HashMap<String,Object>> doc;
 
     public RequestUpdateById(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String collectionName,
             @NonNull QueryInfo query,
             @NonNull UpdateInfo doc) {

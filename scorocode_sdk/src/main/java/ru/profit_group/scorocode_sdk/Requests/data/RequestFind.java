@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 
 /**
@@ -27,7 +27,7 @@ public class RequestFind {
     private Integer skip;
 
     public RequestFind(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @Nullable Query query,
             @Nullable SortInfo sort,

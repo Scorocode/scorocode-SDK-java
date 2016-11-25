@@ -2,9 +2,7 @@ package ru.profit_group.scorocode_sdk.Requests.scripts;
 
 import android.support.annotation.NonNull;
 
-import java.util.HashMap;
-
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 /**
  * Created by Peter Staranchuk on 5/10/2016
@@ -19,7 +17,7 @@ public class RequestSendScriptTask {
     private Object pool;
 
     public RequestSendScriptTask(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String scriptId,
             @NonNull Object dataPoolForScript) {
         this.app = stateHolder.getApplicationId();

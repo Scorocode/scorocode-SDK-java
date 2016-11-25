@@ -6,8 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
-import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 /**
  * Created by Peter Staranchuk on 5/10/2016
@@ -23,7 +22,7 @@ public class RequestSendEmail {
     private MessageEmail msg;
 
     public RequestSendEmail(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @Nullable Query query,
             @NonNull MessageEmail msg) {

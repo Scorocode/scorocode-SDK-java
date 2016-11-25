@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
-import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.UpdateInfo;
 
 /**
@@ -25,7 +24,7 @@ public class RequestUpdate {
     private Integer limit;
 
     public RequestUpdate(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String collectionName,
             @Nullable Query query,
             @NonNull UpdateInfo doc,

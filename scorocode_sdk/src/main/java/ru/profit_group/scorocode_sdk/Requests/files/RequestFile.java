@@ -2,7 +2,7 @@ package ru.profit_group.scorocode_sdk.Requests.files;
 
 import android.support.annotation.NonNull;
 
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
 /**
  * Created by Peter Staranchuk on 5/10/2016
@@ -19,7 +19,7 @@ public class RequestFile {
     private String file;
 
     public RequestFile(
-            @NonNull ScorocodeSdkStateHolder stateHolder,
+            @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @NonNull String docId,
             @NonNull String field,
