@@ -161,7 +161,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/update")
-    Call<ResponseCodes> updateCollection(@Body RequestUpdateCollection requestUpdateCollection);
+    Call<ResponseCollection> updateCollection(@Body RequestUpdateCollection requestUpdateCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/delete")

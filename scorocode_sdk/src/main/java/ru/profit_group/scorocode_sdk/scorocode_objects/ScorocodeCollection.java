@@ -42,7 +42,7 @@ public class ScorocodeCollection {
 
     @NonNull
     public String getCollectionName() {
-        return name == null? "" : id;
+        return name == null? "" : name;
     }
 
     @NonNull

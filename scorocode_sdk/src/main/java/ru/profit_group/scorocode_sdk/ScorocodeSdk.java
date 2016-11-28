@@ -27,6 +27,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendEmail;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendPush;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
@@ -34,6 +35,7 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
@@ -839,6 +841,31 @@ public class ScorocodeSdk {
             }
         });
     }
+
+    public static void updateCollection(String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, final CallbackUpdateCollection callbackUpdateCollection) {
+        Call<ResponseCollection> updateCollectionCall = getScorocodeApi().updateCollection(new RequestUpdateCollection(stateHolder, collectionId, collectionName, isUseDocsACL, ACL));
+        updateCollectionCall.enqueue(new Callback<ResponseCollection>() {
+            @Override
+            public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackUpdateCollection.onCollectionUpdated(response.body().getCollection());
+                    } else {
+                        callbackUpdateCollection.onUpdateFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackUpdateCollection.onUpdateFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCollection> call, Throwable t) {
+                callbackUpdateCollection.onUpdateFailed(ERROR_CODE_GENERAL, t.getMessage());
+            }
+        });
+    }
+
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();

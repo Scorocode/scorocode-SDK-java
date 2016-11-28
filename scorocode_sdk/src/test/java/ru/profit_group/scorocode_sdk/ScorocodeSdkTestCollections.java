@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Index;
 import ru.profit_group.scorocode_sdk.scorocode_objects.IndexField;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
@@ -21,11 +22,15 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTypes;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Trigger;
 
+import static org.junit.Assert.fail;
+
 /**
  * Created by Peter Staranchuk on 11/28/16
  */
 
 public class ScorocodeSdkTestCollections {
+
+    public static final String COLLECTION_NAME = "testcollection";
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -72,7 +77,7 @@ public class ScorocodeSdkTestCollections {
     public void test3CreateCollection() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.createCollection("newcollectionfortest111", false, getTestACL() , new CallbackCreateCollection() {
+        ScorocodeSdk.createCollection("testcollection", false, getTestACL() , new CallbackCreateCollection() {
             @Override
             public void onCollectionCreated(ScorocodeCollection collection) {
                 countDownLatch.countDown();
@@ -83,6 +88,37 @@ public class ScorocodeSdkTestCollections {
                 countDownLatch.countDown();
             }
         });
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test4UpdateCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionByName(COLLECTION_NAME, new CallbackGetCollection() {
+            @Override
+            public void onRequestSucceed(ScorocodeCollection collection) {
+                ScorocodeSdk.updateCollection(collection.getCollectionName(), collection.getCollectionName()+"changed", false, getTestACL(), new CallbackUpdateCollection() {
+                    @Override
+                    public void onCollectionUpdated(ScorocodeCollection collection) {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onUpdateFailed(String errorCode, String errorMessage) {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                fail();
+                countDownLatch.countDown();
+            }
+        });
+
         countDownLatch.await();
     }
 
