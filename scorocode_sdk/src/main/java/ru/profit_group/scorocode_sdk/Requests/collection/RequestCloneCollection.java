@@ -12,8 +12,10 @@ public class RequestCloneCollection extends AppBase {
 
     private ScorocodeCollection collection;
 
-    public RequestCloneCollection(ScorocodeCoreInfo stateHolder, ScorocodeCollection collection) {
+    public RequestCloneCollection(ScorocodeCoreInfo stateHolder, String collectionId, String newCollectionName) {
         super(stateHolder);
-        this.collection = collection;
+        this.collection = new ScorocodeCollection()
+                .setCollectionId(collectionId)
+                .setCollectionName(newCollectionName);
     }
 }

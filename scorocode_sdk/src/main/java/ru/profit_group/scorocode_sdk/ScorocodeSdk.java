@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
@@ -33,6 +34,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestCloneCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
@@ -888,6 +890,30 @@ public class ScorocodeSdk {
             @Override
             public void onFailure(Call<ResponseCodes> call, Throwable t) {
                 callbackDeleteCollection.onDetelionFailed(ERROR_CODE_GENERAL, t.getMessage());
+            }
+        });
+    }
+
+    public static void cloneCollection(String collectionId, String newCollectionName, final CallbackCloneCollection callbackCloneCollection) {
+        getScorocodeApi().cloneCollection(new RequestCloneCollection(stateHolder, collectionId, newCollectionName))
+        .enqueue(new Callback<ResponseCollection>() {
+            @Override
+            public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackCloneCollection.onCollectionCloned(response.body().getCollection());
+                    } else {
+                        callbackCloneCollection.onCloneOperationFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackCloneCollection.onCloneOperationFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCollection> call, Throwable t) {
+                callbackCloneCollection.onCloneOperationFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
     }

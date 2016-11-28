@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
@@ -51,6 +52,7 @@ public class ScorocodeSdkTestCollections {
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
             }
         });
         countDownLatch.await();
@@ -69,6 +71,7 @@ public class ScorocodeSdkTestCollections {
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
             }
         });
         countDownLatch.await();
@@ -87,6 +90,7 @@ public class ScorocodeSdkTestCollections {
             @Override
             public void onCreationFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
             }
         });
         countDownLatch.await();
@@ -109,14 +113,15 @@ public class ScorocodeSdkTestCollections {
                     @Override
                     public void onUpdateFailed(String errorCode, String errorMessage) {
                         countDownLatch.countDown();
+                        ScorocodeTestHelper.printError("wrong test conditions", errorCode, errorMessage);
                     }
                 });
             }
 
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
-                fail("can't perform test");
                 countDownLatch.countDown();
+                ScorocodeTestHelper.printError("wrong test conditions", errorCode, errorMessage);
             }
         });
 
@@ -152,6 +157,7 @@ public class ScorocodeSdkTestCollections {
                     @Override
                     public void onDetelionFailed(String errorCodes, String errorMessage) {
                         countDownLatch.countDown();
+                        ScorocodeTestHelper.printError("wrong test conditions", errorCodes, errorMessage);
                     }
                 });
             }
@@ -159,12 +165,50 @@ public class ScorocodeSdkTestCollections {
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
-                fail("can't perform test");
+                ScorocodeTestHelper.printError("wrong test conditions", errorCode, errorMessage);
             }
         });
 
         countDownLatch.await();
     }
+
+
+    @Test
+    public void test5CloneCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeCollection> collections) {
+
+                if(collections.size() == 0) {
+                    fail("there are no any collection to delete");
+                }
+
+                ScorocodeSdk.cloneCollection(collections.get(0).getCollectionId(), collections.get(0).getCollectionName() + "cloned", new CallbackCloneCollection() {
+                    @Override
+                    public void onCollectionCloned(ScorocodeCollection collection) {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onCloneOperationFailed(String errorCode, String errorMessage) {
+                        countDownLatch.countDown();
+                        ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
 
     @NonNull
     private ScorocodeCollection getTestCollection() {

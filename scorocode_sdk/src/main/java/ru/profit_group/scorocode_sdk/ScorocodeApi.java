@@ -169,7 +169,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/clone")
-    Call<ResponseCodes> cloneCollection(@Body RequestCloneCollection requestCloneCollection);
+    Call<ResponseCollection> cloneCollection(@Body RequestCloneCollection requestCloneCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/index/create")
