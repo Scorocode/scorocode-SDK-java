@@ -15,6 +15,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackInsert;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
@@ -29,10 +30,12 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollections;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
@@ -754,7 +757,31 @@ public class ScorocodeSdk {
 
             @Override
             public void onFailure(Call<ResponseAppInfo> call, Throwable t) {
-                callbackGetApplicationInfo.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                callbackGetApplicationInfo.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
+            }
+        });
+    }
+
+    public static void getCollectionsList(final CallbackGetCollectionsList callbackGetCollectionsList) {
+        Call<ResponseCollections> collectionsCall = getScorocodeApi().getCollectionsList(new RequestCollectionList(stateHolder));
+        collectionsCall.enqueue(new Callback<ResponseCollections>() {
+            @Override
+            public void onResponse(Call<ResponseCollections> call, Response<ResponseCollections> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackGetCollectionsList.onRequestSucceed(response.body().getCollections());
+                    } else {
+                        callbackGetCollectionsList.onRequestFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackGetCollectionsList.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCollections> call, Throwable t) {
+                callbackGetCollectionsList.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
     }

@@ -48,6 +48,7 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestStatistic;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollections;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
 import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
@@ -148,7 +149,7 @@ public interface ScorocodeApi {
     //Collections methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections")
-    Call<ResponseCodes> getCollectionsList(@Body RequestCollectionList requestCollectionList);
+    Call<ResponseCollections> getCollectionsList(@Body RequestCollectionList requestCollectionList);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/get")
