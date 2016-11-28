@@ -410,7 +410,12 @@ public class ScorocodeSdk {
                     ResponseString responseFindDocument = response.body();
                     if(NetworkHelper.isResponseSucceed(responseFindDocument)) {
                         String base64data = response.body().getResult();
-                        callbackFindDocument.onDocumentFound(Document.decodeDocumentsList(base64data));
+                        List<DocumentInfo> documentInfos = Document.decodeDocumentsList(base64data);
+                        if(documentInfos.size() != 0) {
+                            callbackFindDocument.onDocumentFound(documentInfos);
+                        } else {
+                            callbackFindDocument.onDocumentNotFound("0", "Document not found");
+                        }
                     } else {
                         callbackFindDocument.onDocumentNotFound(responseFindDocument.getErrCode(), responseFindDocument.getErrMsg());
                     }
