@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 
@@ -29,13 +30,29 @@ public class ScorocodeSdkTestCollections {
         ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
             @Override
             public void onRequestSucceed(List<ScorocodeCollection> collections) {
-                Log.d("","");
                 countDownLatch.countDown();
             }
 
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
-                Log.d("","");
+                countDownLatch.countDown();
+            }
+        });
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test2GetCollectionByName() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionByName("devices", new CallbackGetCollection() {
+            @Override
+            public void onRequestSucceed(ScorocodeCollection collection) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
             }
         });

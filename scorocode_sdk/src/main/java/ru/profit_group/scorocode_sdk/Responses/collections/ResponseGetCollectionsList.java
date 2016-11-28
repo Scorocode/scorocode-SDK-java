@@ -11,10 +11,10 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
  * Created by Peter Staranchuk on 11/28/16
  */
 
-public class ResponseCollections extends ResponseCodes {
+public class ResponseGetCollectionsList extends ResponseCodes {
     private Map<String, ScorocodeCollection> collections;
 
-    public ResponseCollections(Map<String, ScorocodeCollection> collections) {
+    public ResponseGetCollectionsList(Map<String, ScorocodeCollection> collections) {
         this.collections = collections;
     }
 

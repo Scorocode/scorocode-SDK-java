@@ -48,7 +48,8 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestStatistic;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
-import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollections;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionByName;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
 import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
@@ -58,7 +59,6 @@ import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdate;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdateById;
-import rx.Observable;
 
 /**
  * Created by Peter Staranchuk on 5/10/16
@@ -149,11 +149,11 @@ public interface ScorocodeApi {
     //Collections methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections")
-    Call<ResponseCollections> getCollectionsList(@Body RequestCollectionList requestCollectionList);
+    Call<ResponseGetCollectionsList> getCollectionsList(@Body RequestCollectionList requestCollectionList);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/get")
-    Call<ResponseCodes> getCollectionByName(@Body RequestCollectionByName requestCollectionByName);
+    Call<ResponseGetCollectionByName> getCollectionByName(@Body RequestCollectionByName requestCollectionByName);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/create")
