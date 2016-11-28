@@ -11,6 +11,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
@@ -32,11 +33,12 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
-import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionByName;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
@@ -45,6 +47,8 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.NetworkHelper;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
@@ -789,10 +793,10 @@ public class ScorocodeSdk {
     }
 
     public static void getCollectionByName(String collectionName, final CallbackGetCollection callbackGetCollection) {
-        Call<ResponseGetCollectionByName> getCollectionByNameCall = getScorocodeApi().getCollectionByName(new RequestCollectionByName(stateHolder, collectionName));
-        getCollectionByNameCall.enqueue(new Callback<ResponseGetCollectionByName>() {
+        Call<ResponseCollection> getCollectionByNameCall = getScorocodeApi().getCollectionByName(new RequestCollectionByName(stateHolder, collectionName));
+        getCollectionByNameCall.enqueue(new Callback<ResponseCollection>() {
             @Override
-            public void onResponse(Call<ResponseGetCollectionByName> call, Response<ResponseGetCollectionByName> response) {
+            public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
                 if(response != null && response.body() != null) {
                     ResponseCodes responseCodes = response.body();
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
@@ -806,8 +810,32 @@ public class ScorocodeSdk {
             }
 
             @Override
-            public void onFailure(Call<ResponseGetCollectionByName> call, Throwable t) {
+            public void onFailure(Call<ResponseCollection> call, Throwable t) {
                 callbackGetCollection.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
+            }
+        });
+    }
+
+    public static void createCollection(String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, final CallbackCreateCollection callbackCreateCollection) {
+        Call<ResponseCollection> createCollectionCall = getScorocodeApi().createCollection(new RequestCreateCollection(stateHolder, collectionName, isUseDocsACL, ACL));
+        createCollectionCall.enqueue(new Callback<ResponseCollection>() {
+            @Override
+            public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackCreateCollection.onCollectionCreated(response.body().getCollection());
+                    } else {
+                        callbackCreateCollection.onCreationFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackCreateCollection.onCreationFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCollection> call, Throwable t) {
+                callbackCreateCollection.onCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
     }

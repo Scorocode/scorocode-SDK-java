@@ -12,9 +12,9 @@ public class ScorocodeField {
     private boolean readonly;
     private boolean required;
 
-    public ScorocodeField(String name, String type, String target, boolean system, boolean readonly, boolean required) {
+    public ScorocodeField(String name, ScorocodeTypes type, String target, boolean system, boolean readonly, boolean required) {
         this.name = name;
-        this.type = type;
+        this.type = type.getName();
         this.target = target;
         this.system = system;
         this.readonly = readonly;

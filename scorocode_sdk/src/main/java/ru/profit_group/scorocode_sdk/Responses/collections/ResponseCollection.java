@@ -7,10 +7,10 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
  * Created by Peter Staranchuk on 11/28/16
  */
 
-public class ResponseGetCollectionByName extends ResponseCodes {
+public class ResponseCollection extends ResponseCodes {
     private ScorocodeCollection collection;
 
-    public ResponseGetCollectionByName(ScorocodeCollection collection) {
+    public ResponseCollection(ScorocodeCollection collection) {
         this.collection = collection;
     }
 

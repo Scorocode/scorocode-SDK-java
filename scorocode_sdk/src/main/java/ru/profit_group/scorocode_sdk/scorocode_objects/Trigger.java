@@ -8,8 +8,18 @@ public class Trigger {
     private String code;
     private boolean isActive;
 
+    public Trigger() {}
+
     public Trigger(String code, boolean isActive) {
         this.code = code;
         this.isActive = isActive;
+    }
+
+    public String getCode() {
+        return code == null? "" : code;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }

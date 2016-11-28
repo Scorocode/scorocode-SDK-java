@@ -49,7 +49,7 @@ import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
-import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionByName;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
 import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
@@ -153,11 +153,11 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/get")
-    Call<ResponseGetCollectionByName> getCollectionByName(@Body RequestCollectionByName requestCollectionByName);
+    Call<ResponseCollection> getCollectionByName(@Body RequestCollectionByName requestCollectionByName);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/create")
-    Call<ResponseCodes> createCollection(@Body RequestCreateCollection requestCreateCollection);
+    Call<ResponseCollection> createCollection(@Body RequestCreateCollection requestCreateCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/update")
