@@ -24,22 +24,12 @@ public class ScorocodeApplicationInfo {
     private Settings settings;
     private StorageInfo storage;
     private String stringId;
-    private boolean MasterMode;
-    private boolean AllowPublic;
-    private boolean IsAuth;
-    private ScorocodeUserAuth AuthUser;
-    private long UsedStore;
-    private long DataSize;
-    private long IndexSize;
-    private long FilesStorageSize;
 
     public ScorocodeApplicationInfo(
             String id, String appId, String name, String description, String userId,
             String serverId, Limits limits, Map<String, ScorocodeCollection> schemas, ScorocodePublicKeys accessKeys,
             ScorocodeClientKeys clientKeys, boolean readonly, ScorocodeACLPublic ACLPublic,
-            Settings settings, StorageInfo storage, String stringId, boolean masterMode, boolean allowPublic,
-            boolean isAuth, ScorocodeUserAuth authUser, long usedStore, long dataSize,
-            long indexSize, long filesStorageSize) {
+            Settings settings, StorageInfo storage, String stringId) {
         this._id = id;
         this.appId = appId;
         this.name = name;
@@ -55,14 +45,7 @@ public class ScorocodeApplicationInfo {
         this.settings = settings;
         this.storage = storage;
         this.stringId = stringId;
-        MasterMode = masterMode;
-        AllowPublic = allowPublic;
-        IsAuth = isAuth;
-        AuthUser = authUser;
-        UsedStore = usedStore;
-        DataSize = dataSize;
-        IndexSize = indexSize;
-        FilesStorageSize = filesStorageSize;
+
     }
 
     public String getId() {
@@ -129,35 +112,4 @@ public class ScorocodeApplicationInfo {
         return stringId;
     }
 
-    public boolean isMasterMode() {
-        return MasterMode;
-    }
-
-    public boolean isAllowPublic() {
-        return AllowPublic;
-    }
-
-    public boolean isAuth() {
-        return IsAuth;
-    }
-
-    public ScorocodeUserAuth getUserAuth() {
-        return AuthUser;
-    }
-
-    public long getUsedStore() {
-        return UsedStore;
-    }
-
-    public long getDataSize() {
-        return DataSize;
-    }
-
-    public long getIndexSize() {
-        return IndexSize;
-    }
-
-    public long getFilesStorageSize() {
-        return FilesStorageSize;
-    }
 }

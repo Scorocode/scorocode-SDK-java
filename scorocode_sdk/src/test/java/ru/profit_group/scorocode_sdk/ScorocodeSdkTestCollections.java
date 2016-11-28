@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
@@ -114,8 +115,51 @@ public class ScorocodeSdkTestCollections {
 
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
-                fail();
+                fail("can't perform test");
                 countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test5DeleteCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeCollection> collections) {
+                String id = "";
+                for(ScorocodeCollection collection : collections) {
+                    if(!collection.isSystemCollection()) {
+                        id = collection.getCollectionId();
+                        break;
+                    }
+                }
+
+                if(id.isEmpty()) {
+                    fail("there are no any collection to delete");
+                }
+
+                ScorocodeSdk.deleteCollection(id, new CallbackDeleteCollection() {
+                    @Override
+                    public void onCollectionDeleted() {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onDetelionFailed(String errorCodes, String errorMessage) {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                fail("can't perform test");
             }
         });
 

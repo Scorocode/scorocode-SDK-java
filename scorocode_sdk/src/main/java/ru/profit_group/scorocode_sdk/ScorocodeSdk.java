@@ -12,6 +12,7 @@ import retrofit2.Response;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
@@ -35,6 +36,7 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
@@ -866,6 +868,29 @@ public class ScorocodeSdk {
         });
     }
 
+    public static void deleteCollection(String collectionId, final CallbackDeleteCollection callbackDeleteCollection) {
+        Call<ResponseCodes> deleteCollectionCall = getScorocodeApi().deleteCollection(new RequestDeleteCollection(stateHolder, collectionId));
+        deleteCollectionCall.enqueue(new Callback<ResponseCodes>() {
+            @Override
+            public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                if(response != null && response.body() != null) {
+                    ResponseCodes responseCodes = response.body();
+                    if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                        callbackDeleteCollection.onCollectionDeleted();
+                    } else {
+                        callbackDeleteCollection.onDetelionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                    }
+                } else {
+                    callbackDeleteCollection.onDetelionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                callbackDeleteCollection.onDetelionFailed(ERROR_CODE_GENERAL, t.getMessage());
+            }
+        });
+    }
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();

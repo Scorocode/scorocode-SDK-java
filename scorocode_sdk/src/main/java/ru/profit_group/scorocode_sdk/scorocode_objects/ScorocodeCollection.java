@@ -76,7 +76,7 @@ public class ScorocodeCollection {
     }
 
     @NonNull
-    public ScorocodeCollection setId(String id) {
+    public ScorocodeCollection setCollectionId(String id) {
         this.id = id;
         return this;
     }

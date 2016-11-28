@@ -18,6 +18,6 @@ public class RequestUpdateCollection extends AppBase {
                 .setCollectionName(collectionName)
                 .setUseDocsACL(isUseDocsACL)
                 .setACL(ACL)
-                .setId(collectionId);
+                .setCollectionId(collectionId);
     }
 }

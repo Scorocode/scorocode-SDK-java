@@ -11,8 +11,9 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 public class RequestDeleteCollection extends AppBase {
     private ScorocodeCollection collection;
 
-    public RequestDeleteCollection(ScorocodeCoreInfo stateHolder, ScorocodeCollection collection) {
+    public RequestDeleteCollection(ScorocodeCoreInfo stateHolder, String collectionId) {
         super(stateHolder);
-        this.collection = collection;
+        this.collection = new ScorocodeCollection()
+                .setCollectionId(collectionId);
     }
 }
