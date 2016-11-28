@@ -93,54 +93,6 @@ public class ScorocodeSdkTestMessageClass {
     }
 
     @Test
-    public void test1SendEmail() throws InterruptedException {
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        Message message = new Message();
-        MessageEmail messageEmail = new MessageEmail("anyFrom", "anySubkect", "anyText");
-        message.sendEmail(messageEmail, new CallbackSendEmail() {
-            @Override
-            public void onEmailSend() {
-                countDownLatch.countDown();
-            }
-
-            @Override
-            public void onEmailSendFailed(String errorCode, String errorMessage) {
-                printError("не удалось отправить сообщение", errorCode, errorMessage);
-                countDownLatch.countDown();
-            }
-        });
-
-        countDownLatch.await();
-    }
-
-    @Test
-    public void test2SendEmailWithQuery() throws InterruptedException {
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        Query query = new Query("users");
-        query.equalTo("testUser", true);
-
-        Message message = new Message();
-        MessageEmail messageEmail = new MessageEmail("anyFrom", "anySubject", "anyText");
-
-        message.sendEmail(messageEmail, query, new CallbackSendEmail() {
-            @Override
-            public void onEmailSend() {
-                countDownLatch.countDown();
-            }
-
-            @Override
-            public void onEmailSendFailed(String errorCode, String errorMessage) {
-                printError("не удалось отправить email сообщение", errorCode, errorMessage);
-                countDownLatch.countDown();
-            }
-        });
-
-        countDownLatch.await();
-    }
-
-    @Test
     public void test3SendPush() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 

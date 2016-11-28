@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
@@ -195,6 +196,48 @@ public class ScorocodeSdkTestCollections {
                     public void onCloneOperationFailed(String errorCode, String errorMessage) {
                         countDownLatch.countDown();
                         ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test6CreateCollectionIndex() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeCollection> collections) {
+
+                if(collections.size() == 0) {
+                    fail("there are no any collection to delete");
+                }
+
+                List<IndexField> indexFields = new ArrayList<>();
+                indexFields.add(new IndexField("readACL", 1));
+
+                Index index = new Index("testIndex", indexFields);
+
+                ScorocodeSdk.createCollectionIndex(collections.get(0).getCollectionName(), index, new CallbackCreateCollectionIndex() {
+                    @Override
+                    public void onIndexCreated() {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onIndexCreationFailed(String errorCode, String errorMessage) {
+                        ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                        countDownLatch.countDown();
                     }
                 });
             }

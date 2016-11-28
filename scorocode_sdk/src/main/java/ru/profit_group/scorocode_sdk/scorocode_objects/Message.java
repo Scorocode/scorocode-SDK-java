@@ -18,15 +18,6 @@ import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 
 public class Message implements Serializable {
 
-    public void sendEmail(MessageEmail messageEmail, Query query, CallbackSendEmail callback) throws IllegalStateException {
-        String coll = query.getCollectionName();
-        ScorocodeSdk.sendEmail(coll, query, messageEmail, callback);
-    }
-
-    public void sendEmail(MessageEmail messageEmail, CallbackSendEmail callback) throws IllegalStateException {
-        ScorocodeSdk.sendEmail("users", null, messageEmail, callback);
-    }
-
     public void sendPush(MessagePush messagePush, Query query, CallbackSendPush callback) throws IllegalStateException {
         ScorocodeSdk.sendPush(query.getCollectionName(), query, messagePush, callback);
     }
