@@ -1,5 +1,6 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import retrofit2.Callback;
@@ -17,6 +18,21 @@ import ru.profit_group.scorocode_sdk.ScorocodeSdk;
  */
 
 public class Message implements Serializable {
+
+
+    public void setDebugState(boolean debugState) {
+        ScriptDebugLogger scriptDebugLogger = new ScriptDebugLogger();
+
+        if(debugState) {
+            scriptDebugLogger.run();
+        } else {
+            try {
+                scriptDebugLogger.stop();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void sendPush(MessagePush messagePush, Query query, CallbackSendPush callback) throws IllegalStateException {
         ScorocodeSdk.sendPush(query.getCollectionName(), query, messagePush, callback);

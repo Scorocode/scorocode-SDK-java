@@ -12,7 +12,7 @@ public class CloudCode {
     private String path;
     private String description;
     private String code;
-    private String datetime; //TODO findout is it date
+    private String datetime;
     private boolean isActiveJob;
     private String jobType;
     private Repeat repeat;

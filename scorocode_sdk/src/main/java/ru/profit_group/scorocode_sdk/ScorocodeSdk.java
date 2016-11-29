@@ -969,4 +969,7 @@ public class ScorocodeSdk {
         return null;
     }
 
+    public static String getMessageDebugEndpoint() {
+        return "wss://wss.scorocode.ru/"+stateHolder.getApplicationId()+"/"+stateHolder.getWebsocketKey()+"/messenger_debugger";
+    }
 }
