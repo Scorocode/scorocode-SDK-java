@@ -15,6 +15,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
@@ -42,6 +43,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
+import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
@@ -57,7 +59,6 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.NetworkHelper;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
@@ -943,6 +944,30 @@ public class ScorocodeSdk {
                 callbackCreateCollectionIndex.onIndexCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
+    }
+
+    public static void deleteCollectionIndex(String collectionName, String indexName, final CallbackDeleteCollectionIndex callbackDeleteCollectionIndex) {
+        getScorocodeApi().deleteCollectionsIndex(new RequestDeleteCollectionIndex(stateHolder, collectionName, indexName))
+                .enqueue(new Callback<ResponseCodes>() {
+                    @Override
+                    public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackDeleteCollectionIndex.onIndexDeleted();
+                            } else {
+                                callbackDeleteCollectionIndex.onIndexDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackDeleteCollectionIndex.onIndexDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                        callbackDeleteCollectionIndex.onIndexDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
     }
 
     private static ScorocodeApi getScorocodeApi() {

@@ -13,6 +13,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
@@ -215,20 +216,16 @@ public class ScorocodeSdkTestCollections {
     public void test6CreateCollectionIndex() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
+        ScorocodeSdk.getCollectionByName("devices", new CallbackGetCollection() {
             @Override
-            public void onRequestSucceed(List<ScorocodeCollection> collections) {
-
-                if(collections.size() == 0) {
-                    fail("there are no any collection to delete");
-                }
+            public void onRequestSucceed(ScorocodeCollection collection) {
 
                 List<IndexField> indexFields = new ArrayList<>();
                 indexFields.add(new IndexField("readACL", 1));
 
                 Index index = new Index("testIndex", indexFields);
 
-                ScorocodeSdk.createCollectionIndex(collections.get(0).getCollectionName(), index, new CallbackCreateCollectionIndex() {
+                ScorocodeSdk.createCollectionIndex(collection.getCollectionName(), index, new CallbackCreateCollectionIndex() {
                     @Override
                     public void onIndexCreated() {
                         countDownLatch.countDown();
@@ -251,6 +248,38 @@ public class ScorocodeSdkTestCollections {
 
         countDownLatch.await();
     }
+
+    @Test
+    public void test7DeleteCollectionIndex() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getCollectionByName("devices", new CallbackGetCollection() {
+            @Override
+            public void onRequestSucceed(ScorocodeCollection collection) {
+                ScorocodeSdk.deleteCollectionIndex("devices", "testIndex", new CallbackDeleteCollectionIndex() {
+                    @Override
+                    public void onIndexDeleted() {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onIndexDeletionFailed(String errorCode, String errorMessage) {
+                        countDownLatch.countDown();
+                        ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
 
 
     @NonNull

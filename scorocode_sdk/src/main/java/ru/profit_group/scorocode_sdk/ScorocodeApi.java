@@ -177,7 +177,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/index/delete")
-    Call<ResponseCodes> removeCollectionsIndex(@Body RequestDeleteCollectionIndex requestCreateCollectionIndex);
+    Call<ResponseCodes> deleteCollectionsIndex(@Body RequestDeleteCollectionIndex requestCreateCollectionIndex);
 
 
     @Headers({"Content-Type: application/json"})
