@@ -15,6 +15,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
@@ -325,6 +326,26 @@ public class ScorocodeSdkTestCollections {
 
             @Override
             public void onAddFieldFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test10DeleteFieldFromCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.deleteFieldFromCollection("devices", "testNumberField".toLowerCase(), new CallbackDeleteField() {
+            @Override
+            public void onFieldDeleted(ScorocodeCollection collection) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
                 ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
             }

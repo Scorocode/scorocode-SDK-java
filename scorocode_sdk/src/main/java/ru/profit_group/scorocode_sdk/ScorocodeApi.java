@@ -191,7 +191,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/delete")
-    Call<ResponseCodes> deleteFieldFromCollection(@Body RequestDeleteField requestDeleteFieldFromCollection);
+    Call<ResponseCollection> deleteFieldFromCollection(@Body RequestDeleteField requestDeleteFieldFromCollection);
 
     //Folder methods
     @Headers({"Content-Type: application/json"})

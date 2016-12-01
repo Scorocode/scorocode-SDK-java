@@ -13,9 +13,9 @@ public class RequestDeleteField extends AppBase {
     private String coll;
     private ScorocodeField collField;
 
-    public RequestDeleteField(ScorocodeCoreInfo stateHolder, String collectionName, ScorocodeField field) {
+    public RequestDeleteField(ScorocodeCoreInfo stateHolder, String collectionName, String fieldName) {
         super(stateHolder);
         this.coll = collectionName;
-        this.collField = field;
+        this.collField = new ScorocodeField().setName(fieldName);
     }
 }

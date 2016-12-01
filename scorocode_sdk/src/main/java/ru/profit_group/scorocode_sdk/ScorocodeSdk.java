@@ -17,6 +17,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
@@ -46,6 +47,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
+import ru.profit_group.scorocode_sdk.Requests.fields.RequestDeleteField;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
@@ -1023,6 +1025,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseAddField> call, Throwable t) {
                         callbackAddField.onAddFieldFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void deleteFieldFromCollection(String collectionName, String fieldName, final CallbackDeleteField callbackDeleteField) {
+        getScorocodeApi().deleteFieldFromCollection(new RequestDeleteField(stateHolder, collectionName, fieldName))
+                .enqueue(new Callback<ResponseCollection>() {
+                    @Override
+                    public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackDeleteField.onFieldDeleted(response.body().getCollection());
+                            } else {
+                                callbackDeleteField.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackDeleteField.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCollection> call, Throwable t) {
+                        callbackDeleteField.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }

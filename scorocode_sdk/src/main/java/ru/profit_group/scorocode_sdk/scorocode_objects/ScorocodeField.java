@@ -1,5 +1,7 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Peter Staranchuk on 11/21/16
  */
@@ -12,6 +14,8 @@ public class ScorocodeField {
     private boolean readonly;
     private boolean required;
 
+    public ScorocodeField() {}
+
     public ScorocodeField(String name, ScorocodeTypes type, String target, boolean system, boolean readonly, boolean required) {
         this.name = name;
         this.type = type.getName();
@@ -21,10 +25,48 @@ public class ScorocodeField {
         this.required = required;
     }
 
-    public String getFieldName() {
-        return name;
+    @NonNull
+    public ScorocodeField setName(String name) {
+        this.name = name;
+        return this;
     }
 
+    @NonNull
+    public ScorocodeField setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeField setTarget(String target) {
+        this.target = target;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeField setSystem(boolean system) {
+        this.system = system;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeField setReadonly(boolean readonly) {
+        this.readonly = readonly;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeField setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
+    @NonNull
+    public String getFieldName() {
+        return name == null? "" : name;
+    }
+
+    @NonNull
     public ScorocodeTypes getFieldType() {
         for(ScorocodeTypes fieldType : ScorocodeTypes.values()) {
             if(fieldType.getName().equalsIgnoreCase(type)) {
@@ -35,8 +77,9 @@ public class ScorocodeField {
         return ScorocodeTypes.TypeWrong;
     }
 
+    @NonNull
     public String getTarget() {
-        return target;
+        return target == null? "" : target;
     }
 
     public boolean isSystemField() {
