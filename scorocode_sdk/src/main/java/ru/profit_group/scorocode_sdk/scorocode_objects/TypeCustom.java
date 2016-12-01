@@ -10,6 +10,10 @@ public class TypeCustom {
     private int hours;
     private int minutes;
 
+    public TypeCustom() {
+        this(0,0,0);
+    }
+
     public TypeCustom(int days, int hours, int minutes) {
         this.days = days;
         this.hours = hours;

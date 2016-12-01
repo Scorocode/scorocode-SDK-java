@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Script;
 
 
@@ -76,4 +78,32 @@ public class ScorocodeSdkTestScriptClass {
 
         countDownLatch.await();
     }
+
+    @Test
+    public void test3CreateScript() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeScript script = new ScorocodeScript()
+                .setScriptName("scorocodeScriptForTest.js")
+                .setScriptPath("/scorocodePathForTest1.js")
+                .setScriptSourceCode("hello world")
+                .setScriptDescription("script for test");
+
+        ScorocodeSdk.createScript(script, new CallbackCreateScript() {
+            @Override
+            public void onScriptCreated(ScorocodeScript script) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCreationFailed(String errorCode, String errorMessage) {
+                printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
 }

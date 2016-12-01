@@ -1,5 +1,6 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,10 +9,14 @@ import java.util.List;
 
 public class TypeDaily {
     private List<Integer> on;
-    private List<Integer> hours;
+    private Integer hours;
     private Integer minutes;
 
-    public TypeDaily(List<Integer> on, List<Integer> hours, Integer minutes) {
+    public TypeDaily() {
+        this(new ArrayList<Integer>(), 0, 0);
+    }
+
+    public TypeDaily(List<Integer> on, Integer hours, Integer minutes) {
         this.on = on;
         this.hours = hours;
         this.minutes = minutes;

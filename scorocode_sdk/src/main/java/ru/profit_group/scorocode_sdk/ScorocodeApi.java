@@ -57,6 +57,7 @@ import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
 import ru.profit_group.scorocode_sdk.Responses.ResponseString;
 import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
 import ru.profit_group.scorocode_sdk.Responses.folders.ResponseGetFoldersList;
+import ru.profit_group.scorocode_sdk.Responses.scripts.ResponseScript;
 import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
 import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
@@ -209,12 +210,12 @@ public interface ScorocodeApi {
 
     //Script methods
     @Headers({"Content-Type: application/json"})
-    @POST("/api/v1/app/scripts/get")
-    Call<ResponseCodes> getScript(@Body RequestGetScriptById requestGetScript);
+    @POST("/api/v1/app/scripts/create")
+    Call<ResponseScript> createScript(@Body RequestCreateScript requestCreateScript);
 
     @Headers({"Content-Type: application/json"})
-    @POST("/api/v1/app/scripts/create")
-    Call<ResponseCodes> createScript(@Body RequestCreateScript requestCreateScript);
+    @POST("/api/v1/app/scripts/get")
+    Call<ResponseCodes> getScriptById(@Body RequestGetScriptById requestGetScript);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/update")

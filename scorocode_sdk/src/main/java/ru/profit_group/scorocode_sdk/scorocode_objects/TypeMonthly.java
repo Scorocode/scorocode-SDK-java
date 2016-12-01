@@ -1,5 +1,6 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +14,10 @@ public class TypeMonthly {
     private boolean lastDate;
     private Integer hours;
     private Integer minutes;
+
+    public TypeMonthly() {
+        this(new ArrayList<Integer>(), new ArrayList<Integer>(), false, 0, 0);
+    }
 
     public TypeMonthly(List<Integer> on, List<Integer> days, boolean lastDate, Integer hours, Integer minutes) {
         this.on = on;

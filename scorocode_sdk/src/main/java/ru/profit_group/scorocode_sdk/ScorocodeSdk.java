@@ -16,6 +16,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
@@ -59,12 +60,14 @@ import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionInd
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestCreateScript;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
 import ru.profit_group.scorocode_sdk.Responses.folders.ResponseGetFoldersList;
+import ru.profit_group.scorocode_sdk.Responses.scripts.ResponseScript;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
@@ -76,6 +79,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeField;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
@@ -1128,6 +1132,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseCodes> call, Throwable t) {
                         callbackDeleteFolder.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void createScript(ScorocodeScript script, final CallbackCreateScript callbackCreateScript) {
+        getScorocodeApi().createScript(new RequestCreateScript(stateHolder, script))
+                .enqueue(new Callback<ResponseScript>() {
+                    @Override
+                    public void onResponse(Call<ResponseScript> call, Response<ResponseScript> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackCreateScript.onScriptCreated(response.body().getScript());
+                            } else {
+                                callbackCreateScript.onCreationFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackCreateScript.onCreationFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseScript> call, Throwable t) {
+                        callbackCreateScript.onCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }
