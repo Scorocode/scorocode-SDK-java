@@ -215,7 +215,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/get")
-    Call<ResponseCodes> getScriptById(@Body RequestGetScriptById requestGetScript);
+    Call<ResponseScript> getScriptById(@Body RequestGetScriptById requestGetScript);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/update")

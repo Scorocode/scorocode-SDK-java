@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetScriptById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Script;
@@ -97,6 +98,26 @@ public class ScorocodeSdkTestScriptClass {
 
             @Override
             public void onCreationFailed(String errorCode, String errorMessage) {
+                printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test4CreateScript() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.getScriptById("583d77cf5a5a007958c44415", new CallbackGetScriptById() {
+            @Override
+            public void onRequestSucceed(ScorocodeScript script) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
                 printError("test failed", errorCode, errorMessage);
                 countDownLatch.countDown();
             }

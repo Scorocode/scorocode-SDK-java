@@ -28,6 +28,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFoldersList;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetScriptById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackInsert;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLogoutUser;
@@ -61,6 +62,7 @@ import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestCreateScript;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScriptById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
@@ -1159,6 +1161,32 @@ public class ScorocodeSdk {
                     }
                 });
     }
+
+    public static void getScriptById(String scriptId, final CallbackGetScriptById callbackGetScriptById) {
+        getScorocodeApi().getScriptById(new RequestGetScriptById(stateHolder, scriptId))
+                .enqueue(new Callback<ResponseScript>() {
+                    @Override
+                    public void onResponse(Call<ResponseScript> call, Response<ResponseScript> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackGetScriptById.onRequestSucceed(response.body().getScript());
+                            } else {
+                                callbackGetScriptById.onRequestFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackGetScriptById.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseScript> call, Throwable t) {
+                        callbackGetScriptById.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();
