@@ -8,6 +8,7 @@ import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetBotList;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateBot;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeBot;
 
 /**
@@ -66,7 +67,31 @@ public class ScorocodeSdkTestBots {
         countDownLatch.await();
     }
 
+    @Test
+    public void test3UpdateBot() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
 
+        String botName = "testBotName";
+        String telegramTestBotId11 = "telegramTestBotId";
+        String scriptId = "583d5b4d5a5a007958c443b4";
+
+        ScorocodeBot bot = new ScorocodeBot("updated"+botName, "updated"+telegramTestBotId11, scriptId, false);
+
+        ScorocodeSdk.updateBot("58401d165a5a0012c35b682e", bot, new CallbackUpdateBot() {
+            @Override
+            public void onBotUpdated(ScorocodeBot bot) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onUpdateFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
 
 
 

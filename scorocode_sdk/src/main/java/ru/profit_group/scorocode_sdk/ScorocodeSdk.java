@@ -41,6 +41,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendEmail;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendPush;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
@@ -50,6 +51,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestCreateBot;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestGetBotsList;
+import ru.profit_group.scorocode_sdk.Requests.bots.RequestUpdateBot;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCloneCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
@@ -1292,6 +1294,31 @@ public class ScorocodeSdk {
                     }
                 });
     }
+
+    public static void updateBot(String botId, ScorocodeBot bot, final CallbackUpdateBot callbackUpdateBot) {
+        getScorocodeApi().updateBot(new RequestUpdateBot(stateHolder, botId, bot))
+                .enqueue(new Callback<ResponseBot>() {
+                    @Override
+                    public void onResponse(Call<ResponseBot> call, Response<ResponseBot> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackUpdateBot.onBotUpdated(response.body().getBot());
+                            } else {
+                                callbackUpdateBot.onUpdateFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackUpdateBot.onUpdateFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBot> call, Throwable t) {
+                        callbackUpdateBot.onUpdateFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();

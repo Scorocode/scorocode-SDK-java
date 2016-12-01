@@ -12,8 +12,9 @@ public class RequestUpdateBot extends AppBase {
 
     private ScorocodeBot bot;
 
-    public RequestUpdateBot(ScorocodeCoreInfo stateHolder, ScorocodeBot bot) {
+    public RequestUpdateBot(ScorocodeCoreInfo stateHolder, String botId, ScorocodeBot bot) {
         super(stateHolder);
         this.bot = bot;
+        this.bot.setBotId(botId);
     }
 }

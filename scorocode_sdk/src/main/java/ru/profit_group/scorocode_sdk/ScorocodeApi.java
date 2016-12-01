@@ -238,7 +238,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/bots/update")
-    Call<ResponseCodes> updateBot(@Body RequestUpdateBot requestUpdateBot);
+    Call<ResponseBot> updateBot(@Body RequestUpdateBot requestUpdateBot);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/bots/delete")

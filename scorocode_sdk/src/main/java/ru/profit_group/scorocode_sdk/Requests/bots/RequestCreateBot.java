@@ -14,6 +14,6 @@ public class RequestCreateBot extends AppBase {
 
     public RequestCreateBot(ScorocodeCoreInfo stateHolder, String botName, String botId, String scriptId, boolean isActive) {
         super(stateHolder);
-        this.bot = new ScorocodeBot(null, botName, botId, scriptId, isActive);
+        this.bot = new ScorocodeBot(botName, botId, scriptId, isActive);
     }
 }
