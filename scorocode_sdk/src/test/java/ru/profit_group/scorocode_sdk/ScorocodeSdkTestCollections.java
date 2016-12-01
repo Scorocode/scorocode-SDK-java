@@ -17,6 +17,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollectionTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Index;
 import ru.profit_group.scorocode_sdk.scorocode_objects.IndexField;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
@@ -272,6 +273,36 @@ public class ScorocodeSdkTestCollections {
 
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test8UpdateCollectionTriggers() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        boolean isActive = false;
+        ScorocodeTriggers triggers = new ScorocodeTriggers();
+//        triggers.setAfterFind(new Trigger("AFF code", false));
+        triggers.setBeforeInsert(new Trigger("BFI code", isActive));
+        triggers.setAfterInsert(new Trigger("AFI code", isActive));
+        triggers.setBeforeRemove(new Trigger("BFR code", isActive));
+        triggers.setAfterRemove(new Trigger("AFR code", isActive));
+        triggers.setBeforeUpdate(new Trigger("BFU code", isActive));
+        triggers.setAfterUpdate(new Trigger("AFU code", isActive));
+
+        ScorocodeSdk.updateCollectionTriggers("devices", triggers, new CallbackUpdateCollectionTriggers() {
+            @Override
+            public void onTriggersUpdated(ScorocodeTriggers triggers) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onUpdateFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
                 ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
             }

@@ -32,10 +32,12 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendPush;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
+import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCloneCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
@@ -48,6 +50,7 @@ import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
@@ -60,6 +63,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestFind;
@@ -966,6 +970,31 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseCodes> call, Throwable t) {
                         callbackDeleteCollectionIndex.onIndexDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+
+    public static void updateCollectionTriggers(String collectionName, ScorocodeTriggers triggers, final CallbackUpdateCollectionTriggers callbackUpdateCollectionTriggers) {
+        getScorocodeApi().changeCollectionTriggers(new RequestChangeCollectionTriggers(stateHolder, collectionName, triggers))
+                .enqueue(new Callback<ResponseChangeCollectionTriggers>() {
+                    @Override
+                    public void onResponse(Call<ResponseChangeCollectionTriggers> call, Response<ResponseChangeCollectionTriggers> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackUpdateCollectionTriggers.onTriggersUpdated(response.body().getTriggers());
+                            } else {
+                                callbackUpdateCollectionTriggers.onUpdateFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackUpdateCollectionTriggers.onUpdateFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseChangeCollectionTriggers> call, Throwable t) {
+                        callbackUpdateCollectionTriggers.onUpdateFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }

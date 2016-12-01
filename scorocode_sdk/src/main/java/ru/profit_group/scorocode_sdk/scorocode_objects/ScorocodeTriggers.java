@@ -81,4 +81,5 @@ public class ScorocodeTriggers {
     public Trigger getAfterRemove() {
         return afterRemove == null? (new Trigger()) : afterRemove;
     }
+
 }

@@ -48,6 +48,7 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestStatistic;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
@@ -179,6 +180,9 @@ public interface ScorocodeApi {
     @POST("/api/v1/app/collections/index/delete")
     Call<ResponseCodes> deleteCollectionsIndex(@Body RequestDeleteCollectionIndex requestCreateCollectionIndex);
 
+    @Headers({"Content-Type: application/json"})
+    @POST("/api/v1/app/collections/triggers")
+    Call<ResponseChangeCollectionTriggers> changeCollectionTriggers(@Body RequestChangeCollectionTriggers requestChangeCollectionTriggers);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/create")
@@ -187,10 +191,6 @@ public interface ScorocodeApi {
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/delete")
     Call<ResponseCodes> deleteFieldFromCollection(@Body RequestDeleteField requestDeleteFieldFromCollection);
-
-    @Headers({"Content-Type: application/json"})
-    @POST("/api/v1/app/collections/triggers")
-    Call<ResponseCodes> changeCollectionTriggers(@Body RequestChangeCollectionTriggers requestChangeCollectionTriggers);
 
     //Folder methods
     @Headers({"Content-Type: application/json"})
