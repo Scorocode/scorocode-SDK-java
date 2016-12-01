@@ -22,6 +22,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
@@ -63,6 +64,7 @@ import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestCreateScript;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestDeleteScriptById;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScriptById;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestUpdateScript;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
@@ -1208,6 +1210,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseScript> call, Throwable t) {
                         callbackUpdateScript.onUpdateScriptFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void deleteScriptById(String scriptId, final CallbackDeleteScript callbackDeleteScript) {
+        getScorocodeApi().deleteScript(new RequestDeleteScriptById(stateHolder, scriptId))
+                .enqueue(new Callback<ResponseCodes>() {
+                    @Override
+                    public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackDeleteScript.onScriptDeleted();
+                            } else {
+                                callbackDeleteScript.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackDeleteScript.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                        callbackDeleteScript.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }

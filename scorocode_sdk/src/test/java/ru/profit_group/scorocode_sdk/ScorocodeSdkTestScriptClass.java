@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetScriptById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateScript;
@@ -166,5 +167,26 @@ public class ScorocodeSdkTestScriptClass {
         countDownLatch.await();
     }
 
+    @Test
+    public void test5DeleteScript() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        final String scriptId = "583599045a5a0030aa266f4a";
+
+        ScorocodeSdk.deleteScriptById(scriptId, new CallbackDeleteScript() {
+            @Override
+            public void onScriptDeleted() {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
+                printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
 
 }
