@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFoldersList;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeFolder;
 
@@ -32,6 +33,26 @@ public class ScorocodeSdkTestFolders {
 
             @Override
             public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test2CreateNewFolder() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeSdk.createNewFolder("test_folder", new CallbackCreateNewFolder() {
+            @Override
+            public void onFolderCreated() {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCreationFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
                 ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
             }

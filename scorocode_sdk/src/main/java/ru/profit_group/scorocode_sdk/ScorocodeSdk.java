@@ -15,6 +15,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
@@ -49,6 +50,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestDeleteField;
+import ru.profit_group.scorocode_sdk.Requests.folders.RequestCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Requests.folders.RequestFoldersList;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
@@ -1076,6 +1078,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseGetFoldersList> call, Throwable t) {
                         callbackGetFoldersList.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void createNewFolder(String pathToFolder, final CallbackCreateNewFolder callbackCreateNewFolder) {
+        getScorocodeApi().createNewFolder(new RequestCreateNewFolder(stateHolder, pathToFolder))
+                .enqueue(new Callback<ResponseCodes>() {
+                    @Override
+                    public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackCreateNewFolder.onFolderCreated();
+                            } else {
+                                callbackCreateNewFolder.onCreationFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackCreateNewFolder.onCreationFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                        callbackCreateNewFolder.onCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }
