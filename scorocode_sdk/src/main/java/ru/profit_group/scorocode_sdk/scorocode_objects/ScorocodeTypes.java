@@ -14,7 +14,8 @@ public enum ScorocodeTypes {
     TypeArray("Array"),
     TypeObject("Object"),
     TypeRelation("Relation"),
-    TypePointer("Pointer");
+    TypePointer("Pointer"),
+    TypeWrong("WrongType");
 
     private String name;
 

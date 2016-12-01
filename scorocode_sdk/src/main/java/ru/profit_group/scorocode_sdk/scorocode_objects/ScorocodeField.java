@@ -20,4 +20,34 @@ public class ScorocodeField {
         this.readonly = readonly;
         this.required = required;
     }
+
+    public String getFieldName() {
+        return name;
+    }
+
+    public ScorocodeTypes getFieldType() {
+        for(ScorocodeTypes fieldType : ScorocodeTypes.values()) {
+            if(fieldType.getName().equalsIgnoreCase(type)) {
+                return fieldType;
+            }
+        }
+
+        return ScorocodeTypes.TypeWrong;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public boolean isSystemField() {
+        return system;
+    }
+
+    public boolean isReadonlyField() {
+        return readonly;
+    }
+
+    public boolean isRequiredField() {
+        return required;
+    }
 }

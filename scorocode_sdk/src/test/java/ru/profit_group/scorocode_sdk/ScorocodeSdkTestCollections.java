@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackAddField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
@@ -287,7 +288,6 @@ public class ScorocodeSdkTestCollections {
 
         boolean isActive = false;
         ScorocodeTriggers triggers = new ScorocodeTriggers();
-//        triggers.setAfterFind(new Trigger("AFF code", false));
         triggers.setBeforeInsert(new Trigger("BFI code", isActive));
         triggers.setAfterInsert(new Trigger("AFI code", isActive));
         triggers.setBeforeRemove(new Trigger("BFR code", isActive));
@@ -303,6 +303,28 @@ public class ScorocodeSdkTestCollections {
 
             @Override
             public void onUpdateFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test9AddFieldInCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeField field = new ScorocodeField("testNumberField", ScorocodeTypes.TypeNumber, "", false, false, false);
+
+        ScorocodeSdk.addFieldInCollection("devices", field, new CallbackAddField() {
+            @Override
+            public void onFieldAdded(ScorocodeField field) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onAddFieldFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
                 ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
             }

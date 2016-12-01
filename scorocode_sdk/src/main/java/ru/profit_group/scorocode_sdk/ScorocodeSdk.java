@@ -9,6 +9,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackAddField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
@@ -44,6 +45,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionList;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCreateCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
+import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
@@ -53,6 +55,7 @@ import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
+import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
@@ -63,6 +66,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeField;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.SortInfo;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestCount;
@@ -995,6 +999,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseChangeCollectionTriggers> call, Throwable t) {
                         callbackUpdateCollectionTriggers.onUpdateFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void addFieldInCollection(String collectionName, ScorocodeField field, final CallbackAddField callbackAddField) {
+        getScorocodeApi().addFieldInCollection(new RequestCreateField(stateHolder, collectionName, field))
+                .enqueue(new Callback<ResponseAddField>() {
+                    @Override
+                    public void onResponse(Call<ResponseAddField> call, Response<ResponseAddField> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackAddField.onFieldAdded(response.body().getField());
+                            } else {
+                                callbackAddField.onAddFieldFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackAddField.onAddFieldFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseAddField> call, Throwable t) {
+                        callbackAddField.onAddFieldFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }

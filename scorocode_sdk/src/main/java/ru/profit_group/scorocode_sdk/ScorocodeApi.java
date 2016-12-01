@@ -55,6 +55,7 @@ import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
 import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
 import ru.profit_group.scorocode_sdk.Responses.ResponseString;
+import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
 import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
 import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
@@ -186,7 +187,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/create")
-    Call<ResponseCodes> addFieldInCollection(@Body RequestCreateField requestAddFieldInCollection);
+    Call<ResponseAddField> addFieldInCollection(@Body RequestCreateField requestAddFieldInCollection);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/collections/fields/delete")
