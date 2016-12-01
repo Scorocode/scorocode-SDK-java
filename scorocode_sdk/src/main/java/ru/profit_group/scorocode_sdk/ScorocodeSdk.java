@@ -20,6 +20,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
@@ -51,6 +52,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestDeleteField;
 import ru.profit_group.scorocode_sdk.Requests.folders.RequestCreateNewFolder;
+import ru.profit_group.scorocode_sdk.Requests.folders.RequestDeleteFolder;
 import ru.profit_group.scorocode_sdk.Requests.folders.RequestFoldersList;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
@@ -1102,6 +1104,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseCodes> call, Throwable t) {
                         callbackCreateNewFolder.onCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void deleteFolder(String pathToFolder, final CallbackDeleteFolder callbackDeleteFolder) {
+        getScorocodeApi().deleteFolder(new RequestDeleteFolder(stateHolder, pathToFolder))
+                .enqueue(new Callback<ResponseCodes>() {
+                    @Override
+                    public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackDeleteFolder.onFolderDeleted();
+                            } else {
+                                callbackDeleteFolder.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackDeleteFolder.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                        callbackDeleteFolder.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }
