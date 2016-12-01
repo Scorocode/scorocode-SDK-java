@@ -24,6 +24,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFile;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFoldersList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackInsert;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLogoutUser;
@@ -48,6 +49,7 @@ import ru.profit_group.scorocode_sdk.Requests.collection.RequestDeleteCollection
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestUpdateCollection;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestCreateField;
 import ru.profit_group.scorocode_sdk.Requests.fields.RequestDeleteField;
+import ru.profit_group.scorocode_sdk.Requests.folders.RequestFoldersList;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.indexes.RequestDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
@@ -58,6 +60,7 @@ import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollect
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
+import ru.profit_group.scorocode_sdk.Responses.folders.ResponseGetFoldersList;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
@@ -1049,6 +1052,30 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseCollection> call, Throwable t) {
                         callbackDeleteField.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void getFoldersList(String path, final CallbackGetFoldersList callbackGetFoldersList) {
+        getScorocodeApi().getFoldersList(new RequestFoldersList(stateHolder, path))
+                .enqueue(new Callback<ResponseGetFoldersList>() {
+                    @Override
+                    public void onResponse(Call<ResponseGetFoldersList> call, Response<ResponseGetFoldersList> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackGetFoldersList.onRequestSucceed(response.body().getFolders());
+                            } else {
+                                callbackGetFoldersList.onRequestFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackGetFoldersList.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseGetFoldersList> call, Throwable t) {
+                        callbackGetFoldersList.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }

@@ -56,6 +56,7 @@ import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
 import ru.profit_group.scorocode_sdk.Responses.ResponseString;
 import ru.profit_group.scorocode_sdk.Responses.fields.ResponseAddField;
+import ru.profit_group.scorocode_sdk.Responses.folders.ResponseGetFoldersList;
 import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
 import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
@@ -196,7 +197,7 @@ public interface ScorocodeApi {
     //Folder methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/folders")
-    Call<ResponseCodes> getPathToFoldersAndScripts(@Body RequestFoldersList requestPathToFoldersAndScripts);
+    Call<ResponseGetFoldersList> getFoldersList(@Body RequestFoldersList requestFoldersList);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/folders/create")
