@@ -48,6 +48,8 @@ import ru.profit_group.scorocode_sdk.Requests.application.RequestStatistic;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdate;
 import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.bots.ResponseBot;
+import ru.profit_group.scorocode_sdk.Responses.bots.ResponseBotList;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
@@ -228,11 +230,11 @@ public interface ScorocodeApi {
     //Bot methods
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/bots")
-    Call<ResponseCodes> getBotsList(@Body RequestGetBotsList requestGetBotsList);
+    Call<ResponseBotList> getBotsList(@Body RequestGetBotsList requestGetBotsList);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/bots/create")
-    Call<ResponseCodes> createBot(@Body RequestCreateBot requestCreateBot);
+    Call<ResponseBot> createBot(@Body RequestCreateBot requestCreateBot);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/bots/update")

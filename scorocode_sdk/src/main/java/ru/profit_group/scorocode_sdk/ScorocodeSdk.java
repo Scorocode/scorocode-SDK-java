@@ -13,6 +13,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackAddField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCloneCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
@@ -25,6 +26,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetBotList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFile;
@@ -46,6 +48,8 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
+import ru.profit_group.scorocode_sdk.Requests.bots.RequestCreateBot;
+import ru.profit_group.scorocode_sdk.Requests.bots.RequestGetBotsList;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCloneCollection;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestCollectionByName;
@@ -68,6 +72,8 @@ import ru.profit_group.scorocode_sdk.Requests.scripts.RequestDeleteScriptById;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScriptById;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestUpdateScript;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
+import ru.profit_group.scorocode_sdk.Responses.bots.ResponseBot;
+import ru.profit_group.scorocode_sdk.Responses.bots.ResponseBotList;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseGetCollectionsList;
@@ -83,6 +89,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.NetworkHelper;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.QueryInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeBot;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeField;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
@@ -1234,6 +1241,54 @@ public class ScorocodeSdk {
                     @Override
                     public void onFailure(Call<ResponseCodes> call, Throwable t) {
                         callbackDeleteScript.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void getBotList(final CallbackGetBotList callbackGetBotList) {
+        getScorocodeApi().getBotsList(new RequestGetBotsList(stateHolder))
+                .enqueue(new Callback<ResponseBotList>() {
+                    @Override
+                    public void onResponse(Call<ResponseBotList> call, Response<ResponseBotList> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackGetBotList.onRequestSucceed(response.body().getBotsList());
+                            } else {
+                                callbackGetBotList.onRequestFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackGetBotList.onRequestFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBotList> call, Throwable t) {
+                        callbackGetBotList.onRequestFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
+
+    public static void createBot(String botName, String botId, String scriptId, boolean isActive, final CallbackCreateBot callbackCreateBot) {
+        getScorocodeApi().createBot(new RequestCreateBot(stateHolder, botName, botId, scriptId, isActive))
+                .enqueue(new Callback<ResponseBot>() {
+                    @Override
+                    public void onResponse(Call<ResponseBot> call, Response<ResponseBot> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackCreateBot.onBotCreated(response.body().getBot());
+                            } else {
+                                callbackCreateBot.onCreationFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackCreateBot.onCreationFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBot> call, Throwable t) {
+                        callbackCreateBot.onCreationFailed(ERROR_CODE_GENERAL, t.getMessage());
                     }
                 });
     }
