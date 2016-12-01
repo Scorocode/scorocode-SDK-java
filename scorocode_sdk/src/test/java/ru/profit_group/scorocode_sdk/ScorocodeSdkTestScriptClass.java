@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetScriptById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendScript;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Script;
 
@@ -107,13 +108,52 @@ public class ScorocodeSdkTestScriptClass {
     }
 
     @Test
-    public void test4CreateScript() throws InterruptedException {
+    public void test4GetScriptById() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         ScorocodeSdk.getScriptById("583d77cf5a5a007958c44415", new CallbackGetScriptById() {
             @Override
             public void onRequestSucceed(ScorocodeScript script) {
                 countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test4UpdateScript() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        final String scriptId = "583d77cf5a5a007958c44415";
+        ScorocodeSdk.getScriptById(scriptId, new CallbackGetScriptById() {
+            @Override
+            public void onRequestSucceed(ScorocodeScript script) {
+
+                ScorocodeScript newScript = new ScorocodeScript()
+                        .setScriptId(script.getScriptId())
+                        .setScriptName("updated" + script.getScriptName())
+                        .setScriptSourceCode("updated" + script.getScriptSourceCode());
+
+                ScorocodeSdk.updateScript(newScript, scriptId, new CallbackUpdateScript() {
+                    @Override
+                    public void onUpdateScriptSucceed(ScorocodeScript scorocodeScript) {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onUpdateScriptFailed(String errorCode, String errorMessage) {
+                        printError("test failed", errorCode, errorMessage);
+                        countDownLatch.countDown();
+                    }
+                });
+
             }
 
             @Override

@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public class ScorocodeScript {
+    private String _id;
     private String name;
     private String path;
     private String description;
@@ -36,6 +37,12 @@ public class ScorocodeScript {
         this.jobStartAt = jobStartAt;
         this.nextRun = nextRun;
 //        this.ACL = ACL;
+    }
+
+    @NonNull
+    public ScorocodeScript setScriptId(String _id) {
+        this._id = _id;
+        return this;
     }
 
     @NonNull
@@ -137,6 +144,11 @@ public class ScorocodeScript {
 //    public ScorocodeACL getACL() {
 //        return ACL;
 //    }
+
+
+    public String getScriptId() {
+        return _id;
+    }
 
     private enum JobType {
         CUSTOM(TypeCustom.getName()),

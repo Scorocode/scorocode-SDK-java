@@ -9,8 +9,10 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
  */
 
 public class RequestUpdateScript extends RequestCreateScript {
+    private String script;
 
-    public RequestUpdateScript(ScorocodeCoreInfo stateHolder, ScorocodeScript cloudCode) {
-        super(stateHolder, cloudCode);
+    public RequestUpdateScript(ScorocodeCoreInfo stateHolder, String scriptId, ScorocodeScript script) {
+        super(stateHolder, script);
+        this.script = scriptId;
     }
 }

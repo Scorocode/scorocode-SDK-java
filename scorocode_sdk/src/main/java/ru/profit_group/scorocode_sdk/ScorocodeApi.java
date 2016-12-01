@@ -219,7 +219,7 @@ public interface ScorocodeApi {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/update")
-    Call<ResponseCodes> updateScript(@Body RequestUpdateScript requestUpdateScript);
+    Call<ResponseScript> updateScript(@Body RequestUpdateScript requestUpdateScript);
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/app/scripts/delete")

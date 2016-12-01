@@ -42,6 +42,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
@@ -63,6 +64,7 @@ import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestCreateScript;
 import ru.profit_group.scorocode_sdk.Requests.scripts.RequestGetScriptById;
+import ru.profit_group.scorocode_sdk.Requests.scripts.RequestUpdateScript;
 import ru.profit_group.scorocode_sdk.Responses.application.ResponseAppInfo;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseChangeCollectionTriggers;
 import ru.profit_group.scorocode_sdk.Responses.collections.ResponseCollection;
@@ -1186,7 +1188,29 @@ public class ScorocodeSdk {
                 });
     }
 
+    public static void updateScript(ScorocodeScript script, String scriptId, final CallbackUpdateScript callbackUpdateScript) {
+        getScorocodeApi().updateScript(new RequestUpdateScript(stateHolder, scriptId, script))
+                .enqueue(new Callback<ResponseScript>() {
+                    @Override
+                    public void onResponse(Call<ResponseScript> call, Response<ResponseScript> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackUpdateScript.onUpdateScriptSucceed(response.body().getScript());
+                            } else {
+                                callbackUpdateScript.onUpdateScriptFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackUpdateScript.onUpdateScriptFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<ResponseScript> call, Throwable t) {
+                        callbackUpdateScript.onUpdateScriptFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();
