@@ -18,7 +18,6 @@ public class ScorocodeTestHelper {
     private static final String TEST_CLIENT_KEY = "e8a8e407045041918b791e9bc336c413"; // enter your clientKey
     private static final String TEST_MASTER_KEY = "4deea14c6d264e3dba8c1866409463f4"; // enter your master key
 
-    public static final String ANY_REAL_SCRIPT_ID = "57f65c8942d52f1ba275fb68"; // enter scriptId of your "hello world script". tests will run this script
     public static final String TEST_COLLECTION_NAME = "testscorocodesdkcollection";
     public static final String NUMBER_FIELD_1 = "numberField1";
     public static final String TEXT_FIELD_1 = "textField1";

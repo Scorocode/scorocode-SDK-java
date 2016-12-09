@@ -28,6 +28,8 @@ import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.printError;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ScorocodeSdkTestScriptClass {
 
+    private static ScorocodeScript testScript;
+
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
@@ -37,57 +39,7 @@ public class ScorocodeSdkTestScriptClass {
     }
 
     @Test
-    public void test1SendScript() throws InterruptedException {
-        Script script = new Script();
-
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        script.runScript(ScorocodeTestHelper.ANY_REAL_SCRIPT_ID, new CallbackSendScript() {
-            @Override
-            public void onScriptSended() {
-                countDownLatch.countDown();
-            }
-
-            @Override
-            public void onScriptSendFailed(String errorCode, String errorMessage) {
-                printError("не удалось отправить скрипт на исполнение", errorCode, errorMessage);
-                countDownLatch.countDown();
-            }
-        });
-
-        countDownLatch.await();
-    }
-
-    @Test
-    public void test2SendScript() throws InterruptedException {
-        Script script = new Script();
-
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        Map<String, Object> dataPull = new HashMap<>();
-        dataPull.put("collname", "items");
-        dataPull.put("key", "exampleField");
-        dataPull.put("val", "any text");
-
-
-        script.runScript(ScorocodeTestHelper.ANY_REAL_SCRIPT_ID, dataPull, new CallbackSendScript() {
-            @Override
-            public void onScriptSended() {
-                countDownLatch.countDown();
-            }
-
-            @Override
-            public void onScriptSendFailed(String errorCode, String errorMessage) {
-                printError("не удалось отправить скрипт на исполнение", errorCode, errorMessage);
-                countDownLatch.countDown();
-            }
-        });
-
-        countDownLatch.await();
-    }
-
-    @Test
-    public void test3CreateScript() throws InterruptedException {
+    public void test1CreateScript() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         ScorocodeScript script = new ScorocodeScript()
@@ -99,6 +51,7 @@ public class ScorocodeSdkTestScriptClass {
         ScorocodeSdk.createScript(script, new CallbackCreateScript() {
             @Override
             public void onScriptCreated(ScorocodeScript script) {
+                testScript = script;
                 countDownLatch.countDown();
             }
 
@@ -113,10 +66,60 @@ public class ScorocodeSdkTestScriptClass {
     }
 
     @Test
+    public void test2SendScript() throws InterruptedException {
+        Script script = new Script();
+
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        script.runScript(testScript.getScriptId(), new CallbackSendScript() {
+            @Override
+            public void onScriptSended() {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onScriptSendFailed(String errorCode, String errorMessage) {
+                printError("не удалось отправить скрипт на исполнение", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test3SendScript() throws InterruptedException {
+        Script script = new Script();
+
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Map<String, Object> dataPull = new HashMap<>();
+        dataPull.put("collname", "items");
+        dataPull.put("key", "exampleField");
+        dataPull.put("val", "any text");
+
+
+        script.runScript(testScript.getScriptId(), dataPull, new CallbackSendScript() {
+            @Override
+            public void onScriptSended() {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onScriptSendFailed(String errorCode, String errorMessage) {
+                printError("не удалось отправить скрипт на исполнение", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
     public void test4GetScriptById() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.getScriptById("583d77cf5a5a007958c44415", new CallbackGetScriptById() {
+        ScorocodeSdk.getScriptById(testScript.getScriptId(), new CallbackGetScriptById() {
             @Override
             public void onRequestSucceed(ScorocodeScript script) {
                 countDownLatch.countDown();
@@ -136,8 +139,7 @@ public class ScorocodeSdkTestScriptClass {
     public void test4UpdateScript() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        final String scriptId = "583d77cf5a5a007958c44415";
-        ScorocodeSdk.getScriptById(scriptId, new CallbackGetScriptById() {
+        ScorocodeSdk.getScriptById(testScript.getScriptId(), new CallbackGetScriptById() {
             @Override
             public void onRequestSucceed(ScorocodeScript script) {
 
@@ -146,9 +148,10 @@ public class ScorocodeSdkTestScriptClass {
                         .setScriptName("updated" + script.getScriptName())
                         .setScriptSourceCode("updated" + script.getScriptSourceCode());
 
-                ScorocodeSdk.updateScript(newScript, scriptId, new CallbackUpdateScript() {
+                ScorocodeSdk.updateScript(newScript, testScript.getScriptId(), new CallbackUpdateScript() {
                     @Override
                     public void onUpdateScriptSucceed(ScorocodeScript scorocodeScript) {
+                        testScript = scorocodeScript;
                         countDownLatch.countDown();
                     }
 
@@ -175,9 +178,7 @@ public class ScorocodeSdkTestScriptClass {
     public void test5DeleteScript() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        final String scriptId = "583599045a5a0030aa266f4a";
-
-        ScorocodeSdk.deleteScriptById(scriptId, new CallbackDeleteScript() {
+        ScorocodeSdk.deleteScriptById(testScript.getScriptId(), new CallbackDeleteScript() {
             @Override
             public void onScriptDeleted() {
                 countDownLatch.countDown();
