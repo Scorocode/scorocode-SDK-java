@@ -20,6 +20,7 @@ import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Message;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 import ru.profit_group.scorocode_sdk.scorocode_objects.User;
 
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.printError;
@@ -33,6 +34,9 @@ public class ScorocodeSdkTestMessageClass {
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        if(BuildConfig.DEBUG) {
+            ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
+        }
 
         removeTestUsers();
     }

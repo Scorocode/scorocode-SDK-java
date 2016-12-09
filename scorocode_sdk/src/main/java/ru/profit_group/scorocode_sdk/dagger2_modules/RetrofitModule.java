@@ -25,18 +25,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.profit_group.scorocode_sdk.BuildConfig;
 import ru.profit_group.scorocode_sdk.dagger2_scopes.SingletonScope;
 
+import static ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder.getBaseURL;
+
 /**
  * Created by Peter Staranchuk on 11/21/16
  */
 
 @Module
 public class RetrofitModule {
-    private static final String PROD_BASE_URL = "https://api.scorocode.ru";
-    private static final String TEST_BASE_URL = "https://94.126.157.202"; //TODO mock with dagger
 
-    private String getBaseURL() {
-        return BuildConfig.DEBUG? TEST_BASE_URL : PROD_BASE_URL;
-    }
 
     @Provides
     @SingletonScope

@@ -17,6 +17,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.RegexOptions;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -36,6 +37,9 @@ public class ScorocodeSdkTestQueryClass {
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        if(BuildConfig.DEBUG) {
+            ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
+        }
 
         final CountDownLatch countDownLatch = new CountDownLatch(7);
 

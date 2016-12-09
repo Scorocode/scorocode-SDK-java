@@ -6,6 +6,8 @@ import java.io.Serializable;
  * Created by Peter Staranchuk on 10/11/16
  */
 public class ScorocodeSdkStateHolder implements Serializable {
+    private static String PROD_BASE_URL = "https://api.scorocode.ru";
+
     private String applicationId;
     private String clientKey;
     private String masterKey;
@@ -24,6 +26,14 @@ public class ScorocodeSdkStateHolder implements Serializable {
         this.messageKey = messageKey;
         this.scriptKey = scriptKey;
         this.webSocket = webSocket;
+    }
+
+    public static String getBaseURL() {
+        return PROD_BASE_URL;
+    }
+
+    public static void setBaseURL(String url) {
+        PROD_BASE_URL = url;
     }
 
     public String getApplicationId() {

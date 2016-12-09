@@ -22,6 +22,7 @@ import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 import static org.junit.Assert.*;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.TEST_COLLECTION_NAME;
@@ -44,6 +45,9 @@ public class ScorocodeSdkTestDocumentClass {
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        if(BuildConfig.DEBUG) {
+            ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
+        }
 
         FILE_FIELD_NAME = "fileField1";
         fileName = "file.txt";
@@ -54,6 +58,7 @@ public class ScorocodeSdkTestDocumentClass {
         addDocument(ScorocodeTestHelper.TEXT_FIELD_1, FIELD_FOR_SEARCH_BY_ID);
         addDocument(ScorocodeTestHelper.TEXT_FIELD_1, FIELD_FOR_SEARCH_BY_ID);
         addDocument(ScorocodeTestHelper.TEXT_FIELD_1, FIELD_FOR_SEARCH_BY_ID);
+
 
     }
 

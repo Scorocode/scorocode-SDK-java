@@ -26,6 +26,9 @@ public class ScorocodeSdkTestApplicationInfoClass {
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        if(BuildConfig.DEBUG) {
+            ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
+        }
     }
 
     @Test

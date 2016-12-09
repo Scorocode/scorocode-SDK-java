@@ -10,6 +10,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFoldersList;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeFolder;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 /**
  * Created by Peter Staranchuk on 12/1/16
@@ -20,6 +21,9 @@ public class ScorocodeSdkTestFolders {
     @BeforeClass
     public static void setUp() throws Exception {
         ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        if(BuildConfig.DEBUG) {
+            ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
+        }
     }
 
     @Test
