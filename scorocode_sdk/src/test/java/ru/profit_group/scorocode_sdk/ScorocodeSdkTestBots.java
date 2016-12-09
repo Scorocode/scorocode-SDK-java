@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateBot;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetBotList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateBot;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeBot;
@@ -93,6 +94,25 @@ public class ScorocodeSdkTestBots {
         countDownLatch.await();
     }
 
+    @Test
+    public void test4DeleteBot() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
 
+        String botId = "584aa54b5a5a00557e96d6a5";
+        ScorocodeSdk.deleteBot(botId, new CallbackDeleteBot() {
+            @Override
+            public void onBotDeleted() {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
 
 }

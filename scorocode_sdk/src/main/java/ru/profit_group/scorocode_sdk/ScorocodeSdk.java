@@ -18,6 +18,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateScript;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteCollectionIndex;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
@@ -50,6 +51,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Requests.application.RequestAppInfo;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestCreateBot;
+import ru.profit_group.scorocode_sdk.Requests.bots.RequestDeleteBot;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestGetBotsList;
 import ru.profit_group.scorocode_sdk.Requests.bots.RequestUpdateBot;
 import ru.profit_group.scorocode_sdk.Requests.collection.RequestChangeCollectionTriggers;
@@ -1319,6 +1321,29 @@ public class ScorocodeSdk {
                 });
     }
 
+    public static void deleteBot(String botId, final CallbackDeleteBot callbackDeleteBot) {
+        getScorocodeApi().deleteBot(new RequestDeleteBot(stateHolder, botId))
+                .enqueue(new Callback<ResponseCodes>() {
+                    @Override
+                    public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
+                        if(response != null && response.body() != null) {
+                            ResponseCodes responseCodes = response.body();
+                            if(NetworkHelper.isResponseSucceed(responseCodes)) {
+                                callbackDeleteBot.onBotDeleted();
+                            } else {
+                                callbackDeleteBot.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                            }
+                        } else {
+                            callbackDeleteBot.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseCodes> call, Throwable t) {
+                        callbackDeleteBot.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                    }
+                });
+    }
 
     private static ScorocodeApi getScorocodeApi() {
         return scorocodeApiComponent.getScorocodeApi();

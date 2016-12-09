@@ -14,9 +14,9 @@ public class ScorocodeTestHelper {
     private static final String PROD_MASTER_KEY = "383499df2748bb4560745d5da67f5e41"; // enter your master key
 
     //test server
-    private static final String TEST_APP_ID = "f1b9af901260558d55a4bc0125fdb46f"; // enter your applicationId
-    private static final String TEST_CLIENT_KEY = "2df5deb956228be2fecef6ff21ab7d6e"; // enter your clientKey
-    private static final String TEST_MASTER_KEY = "c78973d53a6b7bd856e2432e89abfbf5"; // enter your master key
+    private static final String TEST_APP_ID = "f0460813a2e149608a0d62a654395da0"; // enter your applicationId
+    private static final String TEST_CLIENT_KEY = "e8a8e407045041918b791e9bc336c413"; // enter your clientKey
+    private static final String TEST_MASTER_KEY = "4deea14c6d264e3dba8c1866409463f4"; // enter your master key
 
     public static final String ANY_REAL_SCRIPT_ID = "57f65c8942d52f1ba275fb68"; // enter scriptId of your "hello world script". tests will run this script
     public static final String TEST_COLLECTION_NAME = "testscorocodesdkcollection";

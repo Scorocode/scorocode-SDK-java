@@ -1,5 +1,7 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Peter Staranchuk on 11/21/16
  */
@@ -12,6 +14,8 @@ public class ScorocodeBot {
     private String scriptId;
     private boolean isActive;
 
+    public ScorocodeBot() {}
+
     public ScorocodeBot(String botName, String telegramBotId, String scriptId, boolean isActive) {
         this.name = botName;
         this.botId = telegramBotId;
@@ -19,27 +23,57 @@ public class ScorocodeBot {
         this.isActive = isActive;
     }
 
-    public void setBotId(String _id) {
-        this._id = _id;
-    }
-
+    @NonNull
     public String getBotId() {
-        return _id;
+        return _id == null? "" : _id;
     }
 
+    @NonNull
     public String getName() {
-        return name;
+        return name == null? "" : name;
     }
 
+    @NonNull
     public String getTelegramBotId() {
-        return botId;
+        return botId == null? "" : botId;
     }
 
+    @NonNull
     public String getScriptId() {
-        return scriptId;
+        return scriptId == null? "" : scriptId;
     }
 
     public boolean isBotActive() {
         return isActive;
+    }
+
+    @NonNull
+    public ScorocodeBot setBotId(String id) {
+        this._id = id;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeBot setTelegramBotId(String id) {
+        this._id = id;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeBot setBotName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeBot setScriptId(String scriptId) {
+        this.scriptId = scriptId;
+        return this;
+    }
+
+    @NonNull
+    public ScorocodeBot setActive(boolean active) {
+        isActive = active;
+        return this;
     }
 }

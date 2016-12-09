@@ -12,8 +12,8 @@ public class RequestDeleteBot extends AppBase {
 
     private ScorocodeBot bot;
 
-    public RequestDeleteBot(ScorocodeCoreInfo stateHolder, ScorocodeBot bot) {
+    public RequestDeleteBot(ScorocodeCoreInfo stateHolder, String botId) {
         super(stateHolder);
-        this.bot = bot;
+        this.bot = new ScorocodeBot().setBotId(botId);
     }
 }
