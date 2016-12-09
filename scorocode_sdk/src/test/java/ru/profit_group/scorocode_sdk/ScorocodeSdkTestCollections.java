@@ -318,7 +318,7 @@ public class ScorocodeSdkTestCollections {
 
         ScorocodeField field = new ScorocodeField("testNumberField", ScorocodeTypes.TypeNumber, "", false, false, false);
 
-        ScorocodeSdk.addFieldInCollection("devices", field, new CallbackAddField() {
+        ScorocodeSdk.createCollectionField("devices", field, new CallbackAddField() {
             @Override
             public void onFieldAdded(ScorocodeField field) {
                 countDownLatch.countDown();
@@ -338,7 +338,7 @@ public class ScorocodeSdkTestCollections {
     public void test10DeleteFieldFromCollection() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.deleteFieldFromCollection("devices", "testNumberField".toLowerCase(), new CallbackDeleteField() {
+        ScorocodeSdk.deleteCollectionField("devices", "testNumberField".toLowerCase(), new CallbackDeleteField() {
             @Override
             public void onFieldDeleted(ScorocodeCollection collection) {
                 countDownLatch.countDown();

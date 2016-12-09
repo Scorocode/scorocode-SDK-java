@@ -8,6 +8,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeApplicationInfo;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
 /**
  * Created by Peter Staranchuk on 10/20/16

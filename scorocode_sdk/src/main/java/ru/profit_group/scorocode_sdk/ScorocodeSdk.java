@@ -1033,7 +1033,7 @@ public class ScorocodeSdk {
                 });
     }
 
-    public static void addFieldInCollection(String collectionName, ScorocodeField field, final CallbackAddField callbackAddField) {
+    public static void createCollectionField(String collectionName, ScorocodeField field, final CallbackAddField callbackAddField) {
         getScorocodeApi().addFieldInCollection(new RequestCreateField(stateHolder, collectionName, field))
                 .enqueue(new Callback<ResponseAddField>() {
                     @Override
@@ -1057,7 +1057,7 @@ public class ScorocodeSdk {
                 });
     }
 
-    public static void deleteFieldFromCollection(String collectionName, String fieldName, final CallbackDeleteField callbackDeleteField) {
+    public static void deleteCollectionField(String collectionName, String fieldName, final CallbackDeleteField callbackDeleteField) {
         getScorocodeApi().deleteFieldFromCollection(new RequestDeleteField(stateHolder, collectionName, fieldName))
                 .enqueue(new Callback<ResponseCollection>() {
                     @Override
@@ -1105,7 +1105,7 @@ public class ScorocodeSdk {
                 });
     }
 
-    public static void createNewFolder(String pathToFolder, final CallbackCreateNewFolder callbackCreateNewFolder) {
+    public static void createFolder(String pathToFolder, final CallbackCreateNewFolder callbackCreateNewFolder) {
         getScorocodeApi().createNewFolder(new RequestCreateNewFolder(stateHolder, pathToFolder))
                 .enqueue(new Callback<ResponseCodes>() {
                     @Override

@@ -46,7 +46,7 @@ public class ScorocodeSdkTestFolders {
     public void test2CreateNewFolder() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.createNewFolder("test_folder", new CallbackCreateNewFolder() {
+        ScorocodeSdk.createFolder("test_folder", new CallbackCreateNewFolder() {
             @Override
             public void onFolderCreated() {
                 countDownLatch.countDown();
