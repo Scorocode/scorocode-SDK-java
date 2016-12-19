@@ -1,6 +1,5 @@
 package ru.profit_group.scorocode_sdk;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -21,9 +20,9 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetCollectionsList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollection;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateCollectionTriggers;
+import ru.profit_group.scorocode_sdk.scorocode_objects.Collections;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Index;
 import ru.profit_group.scorocode_sdk.scorocode_objects.IndexField;
-import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeField;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
@@ -58,7 +57,7 @@ public class ScorocodeSdkTestCollections {
     public void test1CreateCollection() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.createCollection(COLLECTION_NAME, false, getTestACL() , new CallbackCreateCollection() {
+        ScorocodeSdk.createCollection(COLLECTION_NAME, false, ScorocodeTestHelper.getTestACL() , new CallbackCreateCollection() {
             @Override
             public void onCollectionCreated(ScorocodeCollection collection) {
                 testCollection = collection;
@@ -121,7 +120,7 @@ public class ScorocodeSdkTestCollections {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         ScorocodeSdk.updateCollection(testCollection.getCollectionId(), "and_updated"+ testCollection.getCollectionName(),
-                false, getTestACL(), new CallbackUpdateCollection() {
+                false, ScorocodeTestHelper.getTestACL(), new CallbackUpdateCollection() {
             @Override
             public void onCollectionUpdated(ScorocodeCollection collection) {
                 testCollection = collection;
@@ -156,7 +155,7 @@ public class ScorocodeSdkTestCollections {
                     }
 
                     @Override
-                    public void onDetelionFailed(String errorCodes, String errorMessage) {
+                    public void onDeletionFailed(String errorCodes, String errorMessage) {
                         countDownLatch.countDown();
                     }
                 });
@@ -302,7 +301,7 @@ public class ScorocodeSdkTestCollections {
             }
 
             @Override
-            public void onDetelionFailed(String errorCodes, String errorMessage) {
+            public void onDeletionFailed(String errorCodes, String errorMessage) {
                 ScorocodeTestHelper.printError("wrong test conditions", errorCodes, errorMessage);
                 countDownLatch.countDown();
             }
@@ -311,12 +310,316 @@ public class ScorocodeSdkTestCollections {
         countDownLatch.await();
     }
 
+    @Test
+    public void test_12CreateCollectionWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-    private ScorocodeACL getTestACL() {
-        List<String> acl = new ArrayList<>();
-        acl.add("*");
+        ScorocodeCollection newCollection = new ScorocodeCollection()
+                .setCollectionName(COLLECTION_NAME)
+                .setUseDocsACL(false)
+                .setACL(ScorocodeTestHelper.getTestACL());
 
-        return new ScorocodeACL(acl, acl, acl, acl);
+        Collections collections = new Collections();
+        collections.createCollection(newCollection, new CallbackCreateCollection() {
+            @Override
+            public void onCollectionCreated(ScorocodeCollection collection) {
+                //collection created
+                testCollection = collection;
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCreationFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_13GetCollectionsListWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+        collections.getCollectionsList(new CallbackGetCollectionsList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeCollection> collections) {
+                //sdk returned collections list
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                //error during request
+            }
+        });
+
+        ScorocodeSdk.getCollectionsList(new CallbackGetCollectionsList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeCollection> collections) {
+                assertNotEquals("There is must be at least one collection", collections.size(), 0);
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_14GetCollectionByNameWithClass() throws Exception {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+        collections.getCollectionByName(testCollection.getCollectionName(), new CallbackGetCollection() {
+            @Override
+            public void onRequestSucceed(ScorocodeCollection collection) {
+                //sdk returned the collection
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_15UpdateCollectionWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+
+        ScorocodeCollection collection = new ScorocodeCollection()
+                .setCollectionName("and_updated"+ testCollection.getCollectionName())
+                .setUseDocsACL(false)
+                .setACL(ScorocodeTestHelper.getTestACL());
+
+        collections.updateCollection(testCollection.getCollectionId(), collection, new CallbackUpdateCollection() {
+            @Override
+            public void onCollectionUpdated(ScorocodeCollection collection) {
+                //collection updated
+            }
+
+            @Override
+            public void onUpdateFailed(String errorCode, String errorMessage) {
+                //error during request
+            }
+        });
+
+        ScorocodeSdk.updateCollection(testCollection.getCollectionId(), "and_updated"+ testCollection.getCollectionName(),
+                false, ScorocodeTestHelper.getTestACL(), new CallbackUpdateCollection() {
+                    @Override
+                    public void onCollectionUpdated(ScorocodeCollection collection) {
+                        testCollection = collection;
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onUpdateFailed(String errorCode, String errorMessage) {
+                        ScorocodeTestHelper.printError("wrong test conditions", errorCode, errorMessage);
+                        countDownLatch.countDown();
+                    }
+                });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_16CloneCollectionWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String oldCollectionId = testCollection.getCollectionId();
+
+        Collections collections = new Collections();
+        collections.cloneCollection(testCollection.getCollectionId(), "and_clonned" + testCollection.getCollectionName(), new CallbackCloneCollection() {
+            @Override
+            public void onCollectionCloned(ScorocodeCollection collection) {
+                //collection cloned
+                testCollection = collection;
+
+                ScorocodeSdk.deleteCollection(oldCollectionId, new CallbackDeleteCollection() {
+                    @Override
+                    public void onCollectionDeleted() {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onDeletionFailed(String errorCodes, String errorMessage) {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+
+            @Override
+            public void onCloneOperationFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_17CreateCollectionIndexWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        List<IndexField> indexFields = new ArrayList<>();
+        indexFields.add(new IndexField("readACL", 1));
+
+        Index index = new Index(INDEX_NAME, indexFields);
+
+        Collections collections = new Collections();
+        collections.createCollectionIndex(testCollection.getCollectionName(), index, new CallbackCreateCollectionIndex() {
+            @Override
+            public void onIndexCreated() {
+                //index created
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onIndexCreationFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test_18DeleteCollectionIndexWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+        collections.deleteCollectionIndex(testCollection.getCollectionName(), INDEX_NAME, new CallbackDeleteCollectionIndex() {
+            @Override
+            public void onIndexDeleted() {
+                //index deleted
+            }
+
+            @Override
+            public void onIndexDeletionFailed(String errorCode, String errorMessage) {
+                //error during request
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_19UpdateCollectionTriggersWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        boolean isActive = false;
+        ScorocodeTriggers triggers = new ScorocodeTriggers();
+        triggers.setBeforeInsert(new Trigger("BFI code", isActive));
+        triggers.setAfterInsert(new Trigger("AFI code", isActive));
+        triggers.setBeforeRemove(new Trigger("BFR code", isActive));
+        triggers.setAfterRemove(new Trigger("AFR code", isActive));
+        triggers.setBeforeUpdate(new Trigger("BFU code", isActive));
+        triggers.setAfterUpdate(new Trigger("AFU code", isActive));
+
+        Collections collections = new Collections();
+        collections.updateCollectionTriggers(testCollection.getCollectionName(), triggers, new CallbackUpdateCollectionTriggers() {
+            @Override
+            public void onTriggersUpdated(ScorocodeTriggers triggers) {
+                //trigger updated
+            }
+
+            @Override
+            public void onUpdateFailed(String errorCode, String errorMessage) {
+                //error during request
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_20AddFieldInCollectionWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeField field = new ScorocodeField("testNumberField".toLowerCase(), ScorocodeTypes.TypeNumber, "", false, false, false);
+
+        Collections collections = new Collections();
+        collections.createCollectionField(testCollection.getCollectionName(), field, new CallbackAddField() {
+            @Override
+            public void onFieldAdded(ScorocodeField field) {
+                //field created
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onAddFieldFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_21DeleteFieldFromCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+        collections.deleteCollectionField(testCollection.getCollectionName(), "testnumberfield", new CallbackDeleteField() {
+            @Override
+            public void onFieldDeleted(ScorocodeCollection collection) {
+                //field deleted
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("fail", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_22DeleteCollection() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Collections collections = new Collections();
+        collections.deleteCollection(testCollection.getCollectionId(), new CallbackDeleteCollection() {
+            @Override
+            public void onCollectionDeleted() {
+                //collection deleted
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCodes, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("wrong test conditions", errorCodes, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
     }
 
 

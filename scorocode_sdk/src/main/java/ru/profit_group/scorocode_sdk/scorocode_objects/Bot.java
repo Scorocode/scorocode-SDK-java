@@ -15,8 +15,8 @@ public class Bot {
         ScorocodeSdk.getBotList(callback);
     }
 
-    public void createBot(String botName, String telegramBotId, String scriptId, boolean isBotActive, CallbackCreateBot callback) {
-        ScorocodeSdk.createBot(botName, telegramBotId, scriptId, isBotActive, callback);
+    public void createBot(ScorocodeBot botInfo, CallbackCreateBot callback) {
+        ScorocodeSdk.createBot(botInfo.getBotName(), botInfo.getTelegramBotId(), botInfo.getScriptId(), botInfo.isBotActive(), callback);
     }
 
     public void updateBot(String botId, ScorocodeBot newBotInfo, CallbackUpdateBot callback) {

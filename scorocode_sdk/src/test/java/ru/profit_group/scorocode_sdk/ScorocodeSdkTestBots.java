@@ -15,6 +15,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteBot;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteScript;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetBotList;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateBot;
+import ru.profit_group.scorocode_sdk.scorocode_objects.Bot;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeBot;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeScript;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
@@ -123,6 +124,99 @@ public class ScorocodeSdkTestBots {
             public void onDeletionFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
                 ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test5CreateBotWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeBot botInfo = new ScorocodeBot(botName, telegramBotId, scriptId, false);
+        Bot bot = new Bot();
+        bot.createBot(botInfo, new CallbackCreateBot() {
+            @Override
+            public void onBotCreated(ScorocodeBot bot) {
+                botId = bot.getBotId();
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCreationFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test6GetBotsListWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Bot bot = new Bot();
+        bot.getBotsList(new CallbackGetBotList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeBot> botList) {
+                //sdk returned bot list
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                //error during request
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+
+    @Test
+    public void test7UpdateBotWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ScorocodeBot newBotInfo = new ScorocodeBot("updated"+botName, "updated"+ telegramBotId, scriptId, false);
+
+        Bot bot = new Bot();
+        bot.updateBot(botId, newBotInfo, new CallbackUpdateBot() {
+            @Override
+            public void onBotUpdated(ScorocodeBot bot) {
+                //bot updated
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onUpdateFailed(String errorCode, String errorMessage) {
+                //error during request
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test8DeleteBotWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Bot bot = new Bot();
+        bot.deleteBot(botId, new CallbackDeleteBot() {
+            @Override
+            public void onBotDeleted() {
+                //bot deleted
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
+                //error during request
+                countDownLatch.countDown();
             }
         });
 

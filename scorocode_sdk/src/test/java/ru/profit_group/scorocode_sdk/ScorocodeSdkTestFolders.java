@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCreateNewFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetFoldersList;
+import ru.profit_group.scorocode_sdk.scorocode_objects.Folders;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeFolder;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
@@ -82,6 +83,75 @@ public class ScorocodeSdkTestFolders {
 
             @Override
             public void onDeletionFailed(String errorCode, String errorMessage) {
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test4GetFoldersListWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Folders folders = new Folders();
+        folders.getFoldersList("server_code", new CallbackGetFoldersList() {
+            @Override
+            public void onRequestSucceed(List<ScorocodeFolder> folderList) {
+                //sdk returned list of folders
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test5CreateNewFolderWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Folders folders = new Folders();
+        folders.createFolder("test_path", new CallbackCreateNewFolder() {
+            @Override
+            public void onFolderCreated() {
+                //folder created
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCreationFailed(String errorCode, String errorMessage) {
+                //error during request
+                ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test6DeleteFolderWithClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Folders folders = new Folders();
+        folders.deleteFolder("server_code", new CallbackDeleteFolder() {
+            @Override
+            public void onFolderDeleted() {
+                //folder deleted
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onDeletionFailed(String errorCode, String errorMessage) {
+                //error during request
                 ScorocodeTestHelper.printError("test failed", errorCode, errorMessage);
                 countDownLatch.countDown();
             }

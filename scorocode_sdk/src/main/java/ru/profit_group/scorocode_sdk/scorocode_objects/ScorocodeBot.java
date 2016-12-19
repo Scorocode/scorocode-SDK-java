@@ -29,7 +29,7 @@ public class ScorocodeBot {
     }
 
     @NonNull
-    public String getName() {
+    public String getBotName() {
         return name == null? "" : name;
     }
 

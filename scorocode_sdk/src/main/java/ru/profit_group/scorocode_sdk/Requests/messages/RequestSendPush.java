@@ -20,12 +20,13 @@ public class RequestSendPush {
     private String coll;
     private Map<String, Object> query;
     private MessagePush msg;
+    private boolean debug;
 
     public RequestSendPush(
             @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @Nullable Query query,
-            @NonNull MessagePush msg) {
+            @NonNull MessagePush msg, boolean debug) {
 
         this.app = stateHolder.getApplicationId();
         this.cli = stateHolder.getClientKey();
@@ -36,5 +37,6 @@ public class RequestSendPush {
             this.query = query.getQueryInfo().getInfo();
         }
         this.msg = msg;
+        this.debug = debug;
     }
 }

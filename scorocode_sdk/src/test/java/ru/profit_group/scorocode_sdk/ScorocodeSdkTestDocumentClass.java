@@ -381,7 +381,7 @@ public class ScorocodeSdkTestDocumentClass {
                             }
 
                             @Override
-                            public void onDetelionFailed(String errorCodes, String errorMessage) {
+                            public void onDeletionFailed(String errorCodes, String errorMessage) {
                                 ScorocodeTestHelper.printError("не удалось удалить файл", errorCodes, errorMessage);
                                 countDownLatch.countDown();
                             }

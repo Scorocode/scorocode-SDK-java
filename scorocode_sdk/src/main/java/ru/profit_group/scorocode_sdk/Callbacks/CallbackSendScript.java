@@ -5,6 +5,6 @@ package ru.profit_group.scorocode_sdk.Callbacks;
  */
 
 public interface CallbackSendScript {
-    void onScriptSended();
+    void onScriptSent();
     void onScriptSendFailed(String errorCode, String errorMessage);
 }

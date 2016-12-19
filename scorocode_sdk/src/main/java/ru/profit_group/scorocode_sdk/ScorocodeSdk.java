@@ -603,16 +603,16 @@ public class ScorocodeSdk {
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
                         callbackDeleteFile.onDocumentDeleted();
                     } else {
-                        callbackDeleteFile.onDetelionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                        callbackDeleteFile.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
                     }
                 } else {
-                    callbackDeleteFile.onDetelionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                    callbackDeleteFile.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCodes> call, Throwable t) {
-                callbackDeleteFile.onDetelionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                callbackDeleteFile.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
     }
@@ -664,16 +664,16 @@ public class ScorocodeSdk {
             @NonNull String collectionName,
             @Nullable Query query,
             @NonNull MessagePush msg,
-            @NonNull final CallbackSendPush callbackSendPush) {
+            boolean isDebugMode, @NonNull final CallbackSendPush callbackSendPush) {
 
-        Call<ResponseCodes> sendPushCall = getScorocodeApi().sendPush(new RequestSendPush(stateHolder, collectionName, query, msg));
+        Call<ResponseCodes> sendPushCall = getScorocodeApi().sendPush(new RequestSendPush(stateHolder, collectionName, query, msg, isDebugMode));
         sendPushCall.enqueue(new Callback<ResponseCodes>() {
             @Override
             public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
                 if(response != null && response.body() != null) {
                     ResponseCodes responseCodes = response.body();
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
-                        callbackSendPush.onPushSended();
+                        callbackSendPush.onPushSent();
                     } else {
 
                         callbackSendPush.onPushSendFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
@@ -700,17 +700,17 @@ public class ScorocodeSdk {
     public static void sendSms(
             @NonNull String collectionName,
             @Nullable Query query,
-            @NonNull MessageSms msg,
+            @NonNull MessageSms msg, boolean isDebugMode,
             @NonNull final CallbackSendSms callbackSendSms) {
 
-        Call<ResponseCodes> sendSmsCall = getScorocodeApi().sendSms(new RequestSendSms(stateHolder, collectionName, query, msg));
+        Call<ResponseCodes> sendSmsCall = getScorocodeApi().sendSms(new RequestSendSms(stateHolder, collectionName, query, msg, isDebugMode));
         sendSmsCall.enqueue(new Callback<ResponseCodes>() {
             @Override
             public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
                 if(response != null && response.body() != null) {
                     ResponseCodes responseCodes = response.body();
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
-                        callbackSendSms.onSmsSended();
+                        callbackSendSms.onSmsSent();
                     } else {
                         callbackSendSms.onSmsSendFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
                     }
@@ -734,17 +734,17 @@ public class ScorocodeSdk {
      */
     public static void runScript(
             @NonNull String scriptId,
-            @Nullable Object dataPoolForScript,
+            @Nullable Object dataPoolForScript, boolean isDebugMode,
             @NonNull final CallbackSendScript callbackSendScript) {
 
-        Call<ResponseCodes> sendScriptTask = getScorocodeApi().sendScriptTask(new RequestSendScriptTask(stateHolder, scriptId, dataPoolForScript));
+        Call<ResponseCodes> sendScriptTask = getScorocodeApi().sendScriptTask(new RequestSendScriptTask(stateHolder, scriptId, dataPoolForScript, isDebugMode));
         sendScriptTask.enqueue(new Callback<ResponseCodes>() {
             @Override
             public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {
                 if(response != null && response.body() != null) {
                     ResponseCodes responseCodes = response.body();
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
-                        callbackSendScript.onScriptSended();
+                        callbackSendScript.onScriptSent();
                     } else {
                         callbackSendScript.onScriptSendFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
                     }
@@ -922,16 +922,16 @@ public class ScorocodeSdk {
                     if(NetworkHelper.isResponseSucceed(responseCodes)) {
                         callbackDeleteCollection.onCollectionDeleted();
                     } else {
-                        callbackDeleteCollection.onDetelionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
+                        callbackDeleteCollection.onDeletionFailed(responseCodes.getErrCode(), responseCodes.getErrMsg());
                     }
                 } else {
-                    callbackDeleteCollection.onDetelionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
+                    callbackDeleteCollection.onDeletionFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCodes> call, Throwable t) {
-                callbackDeleteCollection.onDetelionFailed(ERROR_CODE_GENERAL, t.getMessage());
+                callbackDeleteCollection.onDeletionFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
     }
@@ -1370,6 +1370,10 @@ public class ScorocodeSdk {
     }
 
     public static String getMessageDebugEndpoint() {
-        return "wss://wss.scorocode.ru/"+stateHolder.getApplicationId()+"/"+stateHolder.getWebsocketKey()+"/messenger_debugger";
+        return "wss://wss.scorocode.ru/" + stateHolder.getApplicationId() + "/" + stateHolder.getWebsocketKey() + "/messenger_debugger";
+    }
+
+    public static String getScriptDebugEndpoint(String scriptId) {
+        return "wss://wss.scorocode.ru/" + stateHolder.getApplicationId() + "/" + stateHolder.getWebsocketKey() + "/" + scriptId + "_debug";
     }
 }

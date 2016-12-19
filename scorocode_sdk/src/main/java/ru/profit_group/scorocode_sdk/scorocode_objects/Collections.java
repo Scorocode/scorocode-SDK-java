@@ -27,12 +27,12 @@ public class Collections {
         ScorocodeSdk.getCollectionByName(collectionName, callback);
     }
 
-    public void createCollection(String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, CallbackCreateCollection callback) {
-        ScorocodeSdk.createCollection(collectionName, isUseDocsACL, ACL, callback);
+    public void createCollection(ScorocodeCollection collection, CallbackCreateCollection callback) {
+        ScorocodeSdk.createCollection(collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), callback);
     }
 
-    public void updateCollection(String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, CallbackUpdateCollection callback) {
-        ScorocodeSdk.updateCollection(collectionId, collectionName, isUseDocsACL, ACL, callback);
+    public void updateCollection(String collectionId, ScorocodeCollection collection, CallbackUpdateCollection callback) {
+        ScorocodeSdk.updateCollection(collectionId, collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), callback);
     }
 
     public void deleteCollection(String collectionId, CallbackDeleteCollection callback) {
@@ -51,7 +51,6 @@ public class Collections {
         ScorocodeSdk.deleteCollectionIndex(collectionName, indexName, callback);
     }
 
-    //TODO think about method name (set or update)
     public void updateCollectionTriggers(String collectionName, ScorocodeTriggers triggers, CallbackUpdateCollectionTriggers callback) {
         ScorocodeSdk.updateCollectionTriggers(collectionName, triggers, callback);
     }

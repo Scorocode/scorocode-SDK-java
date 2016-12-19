@@ -20,12 +20,13 @@ public class RequestSendSms {
     private String coll;
     private Map<String, Object> query;
     private MessageSms msg;
+    private boolean debug;
 
     public RequestSendSms(
             @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String coll,
             @Nullable Query query,
-            @NonNull MessageSms msg) {
+            @NonNull MessageSms msg, boolean isDebugMode) {
 
         this.app = stateHolder.getApplicationId();
         this.cli = stateHolder.getClientKey();
@@ -36,5 +37,6 @@ public class RequestSendSms {
             this.query = query.getQueryInfo().getInfo();
         }
         this.msg = msg;
+        this.debug = isDebugMode;
     }
 }

@@ -5,6 +5,6 @@ package ru.profit_group.scorocode_sdk.Callbacks;
  */
 
 public interface CallbackSendPush {
-    void onPushSended();
+    void onPushSent();
     void onPushSendFailed(String errorCode, String errorMessage);
 }

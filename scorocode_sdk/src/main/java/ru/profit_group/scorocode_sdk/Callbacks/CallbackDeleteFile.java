@@ -6,5 +6,5 @@ package ru.profit_group.scorocode_sdk.Callbacks;
 
 public interface CallbackDeleteFile {
     void onDocumentDeleted();
-    void onDetelionFailed(String errorCodes, String errorMessage);
+    void onDeletionFailed(String errorCodes, String errorMessage);
 }

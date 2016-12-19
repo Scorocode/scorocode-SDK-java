@@ -1,16 +1,11 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
-import java.io.IOException;
 import java.io.Serializable;
 
-import retrofit2.Callback;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendEmail;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendPush;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
-import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
-import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 
 /**
@@ -19,35 +14,30 @@ import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 
 public class Message implements Serializable {
 
+    private boolean isDebugMode;
 
-    public void setDebugState(boolean debugState) {
-        ScriptDebugLogger scriptDebugLogger = new ScriptDebugLogger();
+    public Message(boolean isDebugMode) {
+        this.isDebugMode = isDebugMode;
+    }
 
-        if(debugState) {
-            scriptDebugLogger.run();
-        } else {
-            try {
-                scriptDebugLogger.stop();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public Message() {
+        this.isDebugMode = false;
     }
 
     public void sendPush(MessagePush messagePush, Query query, CallbackSendPush callback) throws IllegalStateException {
-        ScorocodeSdk.sendPush(query.getCollectionName(), query, messagePush, callback);
+        ScorocodeSdk.sendPush(query.getCollectionName(), query, messagePush, isDebugMode, callback);
     }
 
     public void sendPush(MessagePush messagePush, CallbackSendPush callback) throws IllegalStateException {
-        ScorocodeSdk.sendPush("users", null, messagePush, callback);
+        ScorocodeSdk.sendPush("users", null, messagePush, isDebugMode, callback);
     }
 
     public void sendSms(MessageSms messageSms, Query query, CallbackSendSms callback) throws IllegalStateException {
-        ScorocodeSdk.sendSms(query.getCollectionName(), query, messageSms, callback);
+        ScorocodeSdk.sendSms(query.getCollectionName(), query, messageSms, isDebugMode, callback);
     }
 
     public void sendSms(MessageSms messageSms, CallbackSendSms callback) throws IllegalStateException {
-        ScorocodeSdk.sendSms("users", null, messageSms, callback);
+        ScorocodeSdk.sendSms("users", null, messageSms, isDebugMode, callback);
     }
 
 }

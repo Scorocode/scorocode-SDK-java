@@ -5,6 +5,6 @@ package ru.profit_group.scorocode_sdk.Callbacks;
  */
 
 public interface CallbackSendSms {
-    void onSmsSended();
+    void onSmsSent();
     void onSmsSendFailed(String errorCode, String errorMessage);
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackApplicationStatistic;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Responses.statistic.ResponseAppStatistic;
+import ru.profit_group.scorocode_sdk.scorocode_objects.ApplicationInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeApplicationInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
@@ -63,6 +64,26 @@ public class ScorocodeSdkTestApplicationInfoClass {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         ScorocodeSdk.getApplicationInfo(new CallbackGetApplicationInfo() {
+            @Override
+            public void onRequestSucceed(ScorocodeApplicationInfo appInfo) {
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onRequestFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
+            }
+        });
+
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test3GetApplicationInfoFromClass() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        ApplicationInfo applicationInfo = new ApplicationInfo();
+        applicationInfo.getApplicationInfo(new CallbackGetApplicationInfo() {
             @Override
             public void onRequestSucceed(ScorocodeApplicationInfo appInfo) {
                 countDownLatch.countDown();

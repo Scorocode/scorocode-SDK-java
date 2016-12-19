@@ -1,6 +1,9 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +27,13 @@ public class ScorocodeApplicationInfo {
     private Settings settings;
     private StorageInfo storage;
     private String stringId;
+    private String npm;
 
     public ScorocodeApplicationInfo(
             String id, String appId, String name, String description, String userId,
             String serverId, Limits limits, Map<String, ScorocodeCollection> schemas, ScorocodePublicKeys accessKeys,
             ScorocodeClientKeys clientKeys, boolean readonly, ScorocodeACLPublic ACLPublic,
-            Settings settings, StorageInfo storage, String stringId) {
+            Settings settings, StorageInfo storage, String stringId, String npm) {
         this._id = id;
         this.appId = appId;
         this.name = name;
@@ -45,37 +49,45 @@ public class ScorocodeApplicationInfo {
         this.settings = settings;
         this.storage = storage;
         this.stringId = stringId;
-
+        this.npm = npm;
     }
 
+    @NonNull
     public String getId() {
-        return _id;
+        return _id == null? "" : _id;
     }
 
+    @NonNull
     public String getAppId() {
-        return appId;
+        return appId == null? "" : appId;
     }
 
+    @NonNull
     public String getApplicationName() {
-        return name;
+        return name == null? "" : name;
     }
 
+    @NonNull
     public String getDescription() {
-        return description;
+        return description == null? "" : description;
     }
 
+    @NonNull
     public String getUserId() {
-        return userId;
+        return userId == null? "" : userId;
     }
 
+    @NonNull
     public String getServerId() {
-        return serverId;
+        return serverId == null? "" : serverId;
     }
 
+    @NonNull
     public Limits getLimits() {
-        return limits;
+        return limits == null? new Limits(0L,0L,0L,0L,0L,0L,0L) : limits;
     }
 
+    @NonNull
     public List<ScorocodeCollection> getCollections() {
         List<ScorocodeCollection> scorocodeCollectionList = new ArrayList<>();
         for(String key : schemas.keySet()) {
@@ -84,32 +96,43 @@ public class ScorocodeApplicationInfo {
         return scorocodeCollectionList;
     }
 
+    @NonNull
     public ScorocodePublicKeys getAccessKeys() {
-        return accessKeys;
+        return accessKeys == null? new ScorocodePublicKeys("","","","","") : accessKeys;
     }
 
+    @NonNull
     public ScorocodeClientKeys getClientKeys() {
-        return clientKeys;
+        return clientKeys == null? new ScorocodeClientKeys("","","","") : clientKeys;
     }
 
+    @NonNull
     public boolean isReadonly() {
         return readonly;
     }
 
+    @NonNull
     public ScorocodeACLPublic getACLPublic() {
-        return ACLPublic;
+        return ACLPublic == null? new ScorocodeACLPublic(false, false, false, false) : ACLPublic;
     }
 
+    @NonNull
     public Settings getSettings() {
-        return settings;
+        return settings == null? new Settings(false, 0L, "", "", (new HashMap<String, MailTemplate>()), "") : settings;
     }
 
+    @NonNull
     public StorageInfo getStorage() {
-        return storage;
+        return storage == null? new StorageInfo("","") : storage;
     }
 
+    @NonNull
     public String getStringId() {
-        return stringId;
+        return stringId == null? "" : stringId;
     }
 
+    @NonNull
+    public String getNpm() {
+        return npm == null? "" : npm;
+    }
 }

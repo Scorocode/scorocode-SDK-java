@@ -2,7 +2,7 @@ package ru.profit_group.scorocode_sdk.scorocode_objects;
 
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,13 +20,12 @@ public class ScorocodeScript {
     private String jobType;
     private Repeat repeat;
     private String nextRun;
-
-//    private ScorocodeACL ACL; //TODO add ACL
+    private List<String> ACL;
 
     public ScorocodeScript() {}
 
     public ScorocodeScript(String name, String path, String description, String code,
-                            boolean isActiveJob, String jobStartAt, JobType jobType, Repeat repeat, String nextRun, ScorocodeACL ACL) {
+                           boolean isActiveJob, String jobStartAt, JobType jobType, Repeat repeat, String nextRun, List<String> ACL) {
         this.name = name;
         this.path = path;
         this.description = description;
@@ -36,7 +35,7 @@ public class ScorocodeScript {
         this.repeat = repeat;
         this.jobStartAt = jobStartAt;
         this.nextRun = nextRun;
-//        this.ACL = ACL;
+        this.ACL = ACL;
     }
 
     @NonNull
@@ -99,24 +98,28 @@ public class ScorocodeScript {
         return this;
     }
 
-//    @NonNull
-//    public ScorocodeScript setScriptACL(ScorocodeACL ACL) {
-//        this.ACL = ACL;
-//        return this;
-//    }
+    @NonNull
+    public ScorocodeScript setScriptACL(List<String> ACL) {
+        this.ACL = ACL;
+        return this;
+    }
 
+    @NonNull
     public String getScriptName() {
         return name == null? "" : name;
     }
 
+    @NonNull
     public String getScriptPath() {
         return path == null? " " : path;
     }
 
+    @NonNull
     public String getScriptDescription() {
         return description == null? "" : description;
     }
 
+    @NonNull
     public String getScriptSourceCode() {
         return code == null? "" : code;
     }
@@ -125,29 +128,34 @@ public class ScorocodeScript {
         return isActiveJob;
     }
 
+    @NonNull
     public String getJobStartAt() {
         return jobStartAt == null? "" : jobStartAt;
     }
 
+    @NonNull
     public String getJobType() {
         return jobType == null? "" : jobType;
     }
 
+    @NonNull
     public Repeat getRepeat() {
         return repeat == null? (new Repeat()) : repeat;
     }
 
+    @NonNull
     public String getNextRun() {
         return nextRun;
     }
 
-//    public ScorocodeACL getACL() {
-//        return ACL;
-//    }
+    @NonNull
+    public List<String> getACL() {
+        return ACL == null? new ArrayList<String>() : ACL;
+    }
 
-
+    @NonNull
     public String getScriptId() {
-        return _id;
+        return _id == null? "" : _id;
     }
 
     private enum JobType {

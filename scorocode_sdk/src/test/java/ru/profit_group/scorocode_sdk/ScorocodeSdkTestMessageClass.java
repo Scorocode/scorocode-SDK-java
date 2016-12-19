@@ -17,6 +17,7 @@ import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
+import ru.profit_group.scorocode_sdk.scorocode_objects.DebugLogger;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Message;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
@@ -33,7 +34,7 @@ import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.printError;
 public class ScorocodeSdkTestMessageClass {
     @BeforeClass
     public static void setUp() throws Exception {
-        ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, null);
+        ScorocodeSdk.initWith(ScorocodeTestHelper.getAppId(), ScorocodeTestHelper.getClientKey(), ScorocodeTestHelper.getMasterKey(), null, null, null, ScorocodeTestHelper.getWebsocketKey());
         if(BuildConfig.DEBUG) {
             ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
         }
@@ -78,6 +79,7 @@ public class ScorocodeSdkTestMessageClass {
         User user = new User();
         Document document = new Document("users");
         document.setField("testUser", true);
+        document.setField("phone", "+79254199280");
 
         final CountDownLatch latch = new CountDownLatch(1);
         user.register("scorocodeSdkTestUser"+number, "scorocodeSdkTestUser"+number+"@testdomain.com", "qwerty", document.getDocumentContent(), new CallbackRegisterUser() {
@@ -88,7 +90,7 @@ public class ScorocodeSdkTestMessageClass {
 
             @Override
             public void onRegisterFailed(String errorCode, String errorMessage) {
-                printError("не удалось создать тестового пользователя. Условия теста нарушены", errorCode, errorMessage);
+//                printError("не удалось создать тестового пользователя. Условия теста нарушены", errorCode, errorMessage);
                 latch.countDown();
             }
         });
@@ -104,7 +106,7 @@ public class ScorocodeSdkTestMessageClass {
         MessagePush messagePush = new MessagePush("text", null);
         message.sendPush(messagePush, new CallbackSendPush() {
             @Override
-            public void onPushSended() {
+            public void onPushSent() {
                 countDownLatch.countDown();
             }
 
@@ -130,7 +132,7 @@ public class ScorocodeSdkTestMessageClass {
         MessagePush messagePush = new MessagePush("text", data);
         message.sendPush(messagePush, new CallbackSendPush() {
             @Override
-            public void onPushSended() {
+            public void onPushSent() {
                 countDownLatch.countDown();
             }
 
@@ -160,7 +162,7 @@ public class ScorocodeSdkTestMessageClass {
         Message message = new Message();
         message.sendPush(messagePush, query, new CallbackSendPush() {
             @Override
-            public void onPushSended() {
+            public void onPushSent() {
                 countDownLatch.countDown();
             }
 
@@ -182,7 +184,7 @@ public class ScorocodeSdkTestMessageClass {
         Message message = new Message();
         message.sendSms(messageSms, new CallbackSendSms() {
             @Override
-            public void onSmsSended() {
+            public void onSmsSent() {
                 countDownLatch.countDown();
             }
 
@@ -207,7 +209,7 @@ public class ScorocodeSdkTestMessageClass {
         Message message = new Message();
         message.sendSms(messageSms, query, new CallbackSendSms() {
             @Override
-            public void onSmsSended() {
+            public void onSmsSent() {
                 countDownLatch.countDown();
             }
 
@@ -220,4 +222,34 @@ public class ScorocodeSdkTestMessageClass {
 
         countDownLatch.await();
     }
+
+    @Test
+    public void test8SendSmsAndDebugResult() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final MessageSms messageSms = new MessageSms("any text");
+        final Query query = new Query("users");
+        final Message message = new Message(true);
+
+        DebugLogger debugLogger = DebugLogger.getMessageDebugLoggerInstance(new DebugLogger.OnLoggerReadyCallback() {
+            @Override
+            public void onLoggerReady() {
+                message.sendSms(messageSms, query, new CallbackSendSms() {
+                    @Override
+                    public void onSmsSent() {
+//                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onSmsSendFailed(String errorCode, String errorMessage) {
+                        printError("не удалось отправить sms сообщение", errorCode, errorMessage);
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+        });
+
+        debugLogger.run();
+        countDownLatch.await();
+    }
+
 }
