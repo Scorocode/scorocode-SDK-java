@@ -1,7 +1,7 @@
-SDK предоставляет доступ к платформе Scorocode для построения приложений,<br>
-основанных на Java / Android. Подробности на нашем сайте: https://scorocode.ru
+This SDK allow you to build backend of your java\Android based apps using backend as a service cloud platform.<br>
+See more information in project website: https://scorocode.ru
 
-Подключить библиотеку к проекту можно при помощи Gradle добавив в dependencies:
+You can easly add library to project via gradle:
 ```java
 
 dependencies {
@@ -10,7 +10,8 @@ dependencies {
 
 ```
 
-Убедитесь, что gradle ищет библиотеки в рекомендуемом Google репозитории jcenter (который включает в себя библиотеки maven):
+Make sure your app searching for repos in jCenter (which currently include all maven's repos).
+
 ```java
 
 repositories {
@@ -18,9 +19,9 @@ repositories {
 }
 ```
 
-Пример использования: <br>
+Basic examples of usage:<br>
 ```java
-1. Зарегистрировать нового пользователя:
+1. Register new user:
 
 User user = new User();
 user.register("any_username", "any_user_email@email.com", "any_user_password", new CallbackRegisterUser() {
@@ -35,7 +36,7 @@ user.register("any_username", "any_user_email@email.com", "any_user_password", n
             }
         });
 
-2. Зарегистрировать пользователя и добавить дополнительную информацию о нем в коллекцию userInfos.
+2. Register new user and add new information about him during registration. Information will be added in userInfos collection in server.
 
 Document documentAboutUser = new Document("userInfos");
 documentAboutUser.setField("city", "Moscow");
@@ -54,8 +55,8 @@ documentAboutUser.getDocumentContent(), new CallbackRegisterUser() {
             }
         });
 
-3. Пример работы с документами (на примере заказа интернет магазина):
-3.1 Создать новый документ с данными о заказе:
+3. Example of work with documents:
+3.1 Create new document with order information:
 
 Document newOrder = new Document("orders");
 newOrder.setField("orderId", "Jsdsncd732");
@@ -74,7 +75,7 @@ newOrder.saveDocument(new CallbackDocumentSaved() {
             }
         });
 
-3.2 Найти информацию о всех неотправленных заказах.
+3.2 Find information about all unsended orders.
 
 Query query = new Query("orders");
 query.equalTo("isOrderSend", false);
