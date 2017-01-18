@@ -5,7 +5,7 @@ SDK предоставляет доступ к платформе Scorocode дл
 ```java
 
 dependencies {
-   compile 'ru.prof-itgroup:scorocode_sdk:1.0.19-beta'
+   compile 'ru.prof-itgroup:scorocode_sdk:1.1.0'
 }
 
 ```
