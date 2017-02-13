@@ -1,6 +1,5 @@
 package ru.profit_group.scorocode_sdk.Callbacks;
 
-import ru.profit_group.scorocode_sdk.Requests.data.RequestUpdateById;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdateById;
 
 /**

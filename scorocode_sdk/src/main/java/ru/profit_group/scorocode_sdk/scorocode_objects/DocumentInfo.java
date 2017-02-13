@@ -1,8 +1,9 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Peter Staranchuk on 10/17/16
@@ -39,12 +40,35 @@ public class DocumentInfo implements Serializable {
         return fields;
     }
 
+    @NonNull
     public Object get(String key) {
         if(content != null) {
             return content.get(key);
         } else {
-            return null;
+            return new Object();
         }
+    }
+
+    public String getString(String key) {
+        return String.valueOf(get(key));
+    }
+
+    public Double getDouble(String key) {
+        return Double.valueOf(getString(key));
+    }
+
+    public int getInteger(String key) {
+        String numberString = getString(key);
+        return Integer.valueOf(numberString.substring(0, numberString.indexOf(".")));
+    }
+
+    public long getLong(String key) {
+        String numberString = getString(key);
+        return Long.valueOf(numberString.substring(0, numberString.indexOf(".")));
+    }
+
+    public Boolean getBoolean(String key) {
+        return Boolean.valueOf(getString(key));
     }
 
     public void put(String field, Object value) {

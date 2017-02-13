@@ -19,8 +19,6 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 import ru.profit_group.scorocode_sdk.scorocode_objects.RegexOptions;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeSdkStateHolder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.ARRAY_FIELD_1;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.NUMBER_FIELD_1;
 import static ru.profit_group.scorocode_sdk.ScorocodeTestHelper.TEST_COLLECTION_NAME;
@@ -43,7 +41,7 @@ public class ScorocodeSdkTestQueryClass {
 
         final CountDownLatch countDownLatch = new CountDownLatch(7);
 
-        removeDocuments(countDownLatch);
+//        removeDocuments(countDownLatch);
         createDocForEqualTest(countDownLatch);
         createDocForNotEqualTest(countDownLatch);
         createDocForContainsAllTest(countDownLatch);
@@ -68,6 +66,7 @@ public class ScorocodeSdkTestQueryClass {
             @Override
             public void onRemoveFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
+                printError("initialization error", errorCode, errorMessage);
             }
         });
     }
@@ -300,7 +299,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test10ExistTest() throws InterruptedException {
+    public void test_10ExistTest() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         query.exists(TEXT_FIELD_1);
@@ -324,7 +323,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test11NotExistTest() throws InterruptedException {
+    public void test_11NotExistTest() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         query.doesNotExist(TEXT_FIELD_1);
@@ -348,7 +347,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test12ContainTest() throws InterruptedException {
+    public void test_12ContainTest() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         query.contains(TEXT_FIELD_1, "ab", new RegexOptions());
@@ -372,7 +371,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test13ContainTestCaseInsensitive() throws InterruptedException {
+    public void test_13ContainTestCaseInsensitive() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         RegexOptions regexOptions = new RegexOptions();
@@ -399,7 +398,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test14StartWith() throws InterruptedException {
+    public void test_14StartWith() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         RegexOptions regexOptions = new RegexOptions();
@@ -425,7 +424,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test15StartWithWithoutOptions() throws InterruptedException {
+    public void test_15StartWithWithoutOptions() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         query.startsWith(TEXT_FIELD_1, "ab");
@@ -449,7 +448,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test16EndWith() throws InterruptedException {
+    public void test_16EndWith() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         RegexOptions regexOptions = new RegexOptions();
@@ -475,7 +474,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test17EndWithWithoutOptions() throws InterruptedException {
+    public void test_17EndWithWithoutOptions() throws InterruptedException {
         Query query = new Query(TEST_COLLECTION_NAME);
 
         query.endsWith(TEXT_FIELD_1, "ab", null);
@@ -513,6 +512,7 @@ public class ScorocodeSdkTestQueryClass {
             @Override
             public void onDocumentSaveFailed(String errorCode, String errorMessage) {
                 countDownLatch.countDown();
+                printError("initialization error", errorCode, errorMessage);
             }
         });
     }
@@ -530,6 +530,7 @@ public class ScorocodeSdkTestQueryClass {
 
             @Override
             public void onDocumentSaveFailed(String errorCode, String errorMessage) {
+                printError("initialization error", errorCode, errorMessage);
                 countDownLatch.countDown();
             }
         });
@@ -556,6 +557,7 @@ public class ScorocodeSdkTestQueryClass {
 
             @Override
             public void onDocumentSaveFailed(String errorCode, String errorMessage) {
+                printError("initialization error", errorCode, errorMessage);
                 countDownLatch.countDown();
             }
         });
@@ -574,6 +576,7 @@ public class ScorocodeSdkTestQueryClass {
 
             @Override
             public void onDocumentSaveFailed(String errorCode, String errorMessage) {
+                printError("initialization error", errorCode, errorMessage);
                 countDownLatch.countDown();
             }
         });

@@ -6,8 +6,6 @@ package ru.profit_group.scorocode_sdk.scorocode_objects;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -88,9 +86,9 @@ public class DebugLogger implements WebSocketListener {
 
     @Override
     public void onFailure(IOException e, Response response) {
-        if(onLoggerReceivedMessage != null) {
+        if (onLoggerReceivedMessage != null) {
             try {
-                onLoggerReceivedMessage.onMessage("Failure: "+ response.body().string() + " " + "ErrorMessage: " + e.getMessage());
+                onLoggerReceivedMessage.onMessage("Failure: " + response.body().string() + " " + "ErrorMessage: " + e.getMessage());
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
