@@ -1,9 +1,6 @@
 package ru.profit_group.scorocode_sdk.Responses.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 
@@ -14,19 +11,17 @@ import ru.profit_group.scorocode_sdk.Responses.ResponseCodes;
 public class ResponseUpdate extends ResponseCodes{
     private Result result;
 
+    public ResponseUpdate(Result result) {
+        this.result = result;
+    }
 
     public Result getResult() {
         return result;
     }
 
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
     public class Result {
         private int count;
         private List<String> docs;
-//        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
         public int getCount() {
             return count;
@@ -44,12 +39,5 @@ public class ResponseUpdate extends ResponseCodes{
             this.docs = docs;
         }
 
-//        public Map<String, Object> getAdditionalProperties() {
-//            return additionalProperties;
-//        }
-
-//        public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-//            this.additionalProperties = additionalProperties;
-//        }
     }
 }

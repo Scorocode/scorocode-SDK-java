@@ -30,9 +30,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTriggers;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeTypes;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Trigger;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Created by Peter Staranchuk on 11/28/16
@@ -510,11 +508,13 @@ public class ScorocodeSdkTestCollections {
         collections.deleteCollectionIndex(testCollection.getCollectionName(), INDEX_NAME, new CallbackDeleteCollectionIndex() {
             @Override
             public void onIndexDeleted() {
+                countDownLatch.countDown();
                 //index deleted
             }
 
             @Override
             public void onIndexDeletionFailed(String errorCode, String errorMessage) {
+                countDownLatch.countDown();
                 //error during request
             }
         });
@@ -540,11 +540,13 @@ public class ScorocodeSdkTestCollections {
             @Override
             public void onTriggersUpdated(ScorocodeTriggers triggers) {
                 //trigger updated
+                countDownLatch.countDown();
             }
 
             @Override
             public void onUpdateFailed(String errorCode, String errorMessage) {
                 //error during request
+                countDownLatch.countDown();
             }
         });
 

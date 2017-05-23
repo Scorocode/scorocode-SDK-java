@@ -10,10 +10,8 @@ import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackRegisterUser;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackRemoveDocument;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendEmail;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendPush;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackSendSms;
-import ru.profit_group.scorocode_sdk.Requests.messages.MessageEmail;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessagePush;
 import ru.profit_group.scorocode_sdk.Requests.messages.MessageSms;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
@@ -155,7 +153,7 @@ public class ScorocodeSdkTestMessageClass {
         data.put("field2", 2);
 
         Query query = new Query("users");
-        query.equalTo("testUser", true);
+        query.equalTo("testuser", true);
 
         MessagePush messagePush = new MessagePush("text", data);
 
@@ -204,7 +202,7 @@ public class ScorocodeSdkTestMessageClass {
         MessageSms messageSms = new MessageSms("any text");
 
         Query query = new Query("users");
-        query.equalTo("testUser", true);
+        query.equalTo("testuser", true);
 
         Message message = new Message();
         message.sendSms(messageSms, query, new CallbackSendSms() {
@@ -236,7 +234,7 @@ public class ScorocodeSdkTestMessageClass {
                 message.sendSms(messageSms, query, new CallbackSendSms() {
                     @Override
                     public void onSmsSent() {
-//                        countDownLatch.countDown();
+                        countDownLatch.countDown();
                     }
 
                     @Override
