@@ -5,9 +5,12 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import com.google.gson.reflect.TypeToken;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
@@ -211,10 +214,10 @@ public class Query implements Serializable {
     }
 
     public void raw(String json) {
-        Gson gson = new Gson();
-        QueryInfo query = gson.fromJson(json, QueryInfo.class);
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        Map<String, Object> map = new Gson().fromJson(json, type);
         reset();
-        queryInfo.getInfo().putAll(query.getInfo());
+        queryInfo.getInfo().putAll(map);
     }
 
     private void addQueryRule(String field, String operation, Object value) {

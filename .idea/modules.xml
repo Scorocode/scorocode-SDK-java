@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/scorocode-SDK-java.iml" filepath="$PROJECT_DIR$/scorocode-SDK-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scorocode-sdk-java.iml" filepath="$PROJECT_DIR$/scorocode-sdk-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/scorocode_sdk/scorocode_sdk.iml" filepath="$PROJECT_DIR$/scorocode_sdk/scorocode_sdk.iml" />
     </modules>
   </component>

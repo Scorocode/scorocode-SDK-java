@@ -1,5 +1,7 @@
 package ru.profit_group.scorocode_sdk;
 
+import android.util.Log;
+
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -498,6 +500,30 @@ public class ScorocodeSdkTestQueryClass {
         countDownLatch.await();
     }
 
+    @Test
+    public void test18RawTest() throws Exception {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        Query query = new Query("querytest");
+        query.raw("{\"_id\": {\"$eq\": \"L8UjiQZRkj\"}}");
+        query.findDocuments(new CallbackFindDocument() {
+            @Override
+            public void onDocumentFound(List<DocumentInfo> documentInfos) {
+                Log.d("","");
+                countDownLatch.countDown();
+
+            }
+
+            @Override
+            public void onDocumentNotFound(String errorCode, String errorMessage) {
+                Log.d("","");
+                countDownLatch.countDown();
+
+            }
+        });
+
+        countDownLatch.await();
+
+    }
 
     private static void createDocForEqualTest(final CountDownLatch countDownLatch) {
         Document document = new Document(TEST_COLLECTION_NAME);
