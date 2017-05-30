@@ -28,11 +28,11 @@ public class Collections {
     }
 
     public void createCollection(ScorocodeCollection collection, CallbackCreateCollection callback) {
-        ScorocodeSdk.createCollection(collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), callback);
+        ScorocodeSdk.createCollection(collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), collection.isNotify(), callback);
     }
 
     public void updateCollection(String collectionId, ScorocodeCollection collection, CallbackUpdateCollection callback) {
-        ScorocodeSdk.updateCollection(collectionId, collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), callback);
+        ScorocodeSdk.updateCollection(collectionId, collection.getCollectionName(), collection.isUseDocsACL(), collection.getACL(), collection.isNotify(), callback);
     }
 
     public void deleteCollection(String collectionId, CallbackDeleteCollection callback) {

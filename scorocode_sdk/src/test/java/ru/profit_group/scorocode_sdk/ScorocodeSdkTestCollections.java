@@ -55,7 +55,7 @@ public class ScorocodeSdkTestCollections {
     public void test1CreateCollection() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        ScorocodeSdk.createCollection(COLLECTION_NAME, false, ScorocodeTestHelper.getTestACL() , new CallbackCreateCollection() {
+        ScorocodeSdk.createCollection(COLLECTION_NAME, false, ScorocodeTestHelper.getTestACL(), true , new CallbackCreateCollection() {
             @Override
             public void onCollectionCreated(ScorocodeCollection collection) {
                 testCollection = collection;
@@ -118,7 +118,7 @@ public class ScorocodeSdkTestCollections {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         ScorocodeSdk.updateCollection(testCollection.getCollectionId(), "and_updated"+ testCollection.getCollectionName(),
-                false, ScorocodeTestHelper.getTestACL(), new CallbackUpdateCollection() {
+                false, ScorocodeTestHelper.getTestACL(), true, new CallbackUpdateCollection() {
             @Override
             public void onCollectionUpdated(ScorocodeCollection collection) {
                 testCollection = collection;
@@ -418,7 +418,7 @@ public class ScorocodeSdkTestCollections {
         });
 
         ScorocodeSdk.updateCollection(testCollection.getCollectionId(), "and_updated"+ testCollection.getCollectionName(),
-                false, ScorocodeTestHelper.getTestACL(), new CallbackUpdateCollection() {
+                false, ScorocodeTestHelper.getTestACL(), true, new CallbackUpdateCollection() {
                     @Override
                     public void onCollectionUpdated(ScorocodeCollection collection) {
                         testCollection = collection;

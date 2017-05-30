@@ -12,12 +12,13 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 public class RequestUpdateCollection extends AppBase {
     private ScorocodeCollection collection;
 
-    public RequestUpdateCollection(ScorocodeCoreInfo stateHolder, String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL) {
+    public RequestUpdateCollection(ScorocodeCoreInfo stateHolder, String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, boolean notify) {
         super(stateHolder);
         this.collection = new ScorocodeCollection()
                 .setCollectionName(collectionName)
                 .setUseDocsACL(isUseDocsACL)
                 .setACL(ACL)
-                .setCollectionId(collectionId);
+                .setCollectionId(collectionId)
+                .setNotify(notify);
     }
 }

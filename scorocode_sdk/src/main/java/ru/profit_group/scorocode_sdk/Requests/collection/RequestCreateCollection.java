@@ -13,11 +13,12 @@ public class RequestCreateCollection extends AppBase {
 
     private ScorocodeCollection collection;
 
-    public RequestCreateCollection(ScorocodeCoreInfo stateHolder, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL) {
+    public RequestCreateCollection(ScorocodeCoreInfo stateHolder, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, boolean notify) {
         super(stateHolder);
         this.collection = new ScorocodeCollection()
                 .setCollectionName(collectionName)
                 .setUseDocsACL(isUseDocsACL)
-                .setACL(ACL);
+                .setACL(ACL)
+                .setNotify(notify);
     }
 }
