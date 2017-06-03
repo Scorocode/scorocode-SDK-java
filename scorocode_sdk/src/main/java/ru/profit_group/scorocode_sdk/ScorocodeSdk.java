@@ -192,7 +192,7 @@ public class ScorocodeSdk {
         });
     }
 
-    private static void initCrashReporter(Application application) {
+    public static void initCrashReporter(Application application) {
         final int NO_FLAGS = 0;
 
         final PackageManager packageManager = application.getPackageManager();
