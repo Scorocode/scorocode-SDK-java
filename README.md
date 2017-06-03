@@ -5,7 +5,7 @@ You can easly add library to project via gradle:
 ```java
 
 dependencies {
-   compile 'ru.prof-itgroup:scorocode_sdk:1.1.2'
+   compile 'ru.prof-itgroup:scorocode_sdk:1.1.5'
 }
 
 ```

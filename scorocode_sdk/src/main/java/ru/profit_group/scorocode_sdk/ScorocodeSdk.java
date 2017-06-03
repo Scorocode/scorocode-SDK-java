@@ -1,6 +1,10 @@
 package ru.profit_group.scorocode_sdk;
 
+import android.app.Application;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -25,6 +29,7 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteField;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFile;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteFolder;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDeleteScript;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackDocumentSaved;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetApplicationInfo;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetBotList;
@@ -86,8 +91,10 @@ import ru.profit_group.scorocode_sdk.Responses.folders.ResponseGetFoldersList;
 import ru.profit_group.scorocode_sdk.Responses.scripts.ResponseScript;
 import ru.profit_group.scorocode_sdk.dagger2_components.DaggerScorocodeApiComponent;
 import ru.profit_group.scorocode_sdk.dagger2_components.ScorocodeApiComponent;
+import ru.profit_group.scorocode_sdk.scorocode_objects.CollectionNames;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
+import ru.profit_group.scorocode_sdk.scorocode_objects.Fields;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Index;
 import ru.profit_group.scorocode_sdk.scorocode_objects.NetworkHelper;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
@@ -184,6 +191,56 @@ public class ScorocodeSdk {
             }
         });
     }
+
+    private static void initCrashReporter(Application application) {
+        final int NO_FLAGS = 0;
+
+        final PackageManager packageManager = application.getPackageManager();
+        final String packageName = application.getPackageName();
+
+        final Thread.UncaughtExceptionHandler defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(final Thread thread, final Throwable ex) {
+                ex.printStackTrace();
+
+                String stackTrace = ex.getMessage() + "\n";
+                for(StackTraceElement trace : ex.getStackTrace()) {
+                    stackTrace += trace.toString() + "\n";
+                }
+
+                Document document = new Document(CollectionNames.CRASHES);
+                document.setField(Fields.MESSAGE, stackTrace);
+                document.setField(Fields.OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
+                document.setField(Fields.MODEL, Build.MODEL);
+                document.setField(Fields.MANUFACTURER, Build.MANUFACTURER);
+                document.setField(Fields.IS_FIXED, false);
+
+                PackageInfo packageInfo = null;
+                try {
+                    packageInfo = packageManager.getPackageInfo(packageName, NO_FLAGS);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                if(packageInfo != null) {
+                    document.setField(Fields.VERSION_NAME, packageInfo.versionName);
+                    document.setField(Fields.VERSION_CODE, String.valueOf(packageInfo.versionCode));
+                }
+
+                document.saveDocument(new CallbackDocumentSaved() {
+                    @Override
+                    public void onDocumentSaved() {}
+
+                    @Override
+                    public void onDocumentSaveFailed(String errorCode, String errorMessage) {}
+                });
+
+                defaultUEH.uncaughtException(thread, ex);
+            }
+        });
+    }
+
 
     /**
      * register new user
