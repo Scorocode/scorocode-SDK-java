@@ -1,6 +1,7 @@
 package ru.profit_group.scorocode_sdk.Requests.collection;
 
 import ru.profit_group.scorocode_sdk.Requests.application.AppBase;
+import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeACL;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCollection;
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
@@ -18,6 +19,16 @@ public class RequestCreateCollection extends AppBase {
         this.collection = new ScorocodeCollection()
                 .setCollectionName(collectionName)
                 .setUseDocsACL(isUseDocsACL)
-                .setACL(ACL);
+                .setACL(ACL)
+                .setNotify(false);
+    }
+
+    public RequestCreateCollection(ScorocodeCoreInfo stateHolder, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, boolean notify) {
+        super(stateHolder);
+        this.collection = new ScorocodeCollection()
+                .setCollectionName(collectionName)
+                .setUseDocsACL(isUseDocsACL)
+                .setACL(ACL)
+                .setNotify(notify);
     }
 }

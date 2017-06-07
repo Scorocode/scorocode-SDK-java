@@ -921,8 +921,8 @@ public class ScorocodeSdk {
         });
     }
 
-    public static void createCollection(String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, final CallbackCreateCollection callbackCreateCollection) {
-        Call<ResponseCollection> createCollectionCall = getScorocodeApi().createCollection(new RequestCreateCollection(stateHolder, collectionName, isUseDocsACL, ACL));
+    public static void createCollection(String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, boolean notify, final CallbackCreateCollection callbackCreateCollection) {
+        Call<ResponseCollection> createCollectionCall = getScorocodeApi().createCollection(new RequestCreateCollection(stateHolder, collectionName, isUseDocsACL, ACL, notify));
         createCollectionCall.enqueue(new Callback<ResponseCollection>() {
             @Override
             public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {
@@ -945,8 +945,8 @@ public class ScorocodeSdk {
         });
     }
 
-    public static void updateCollection(String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, final CallbackUpdateCollection callbackUpdateCollection) {
-        Call<ResponseCollection> updateCollectionCall = getScorocodeApi().updateCollection(new RequestUpdateCollection(stateHolder, collectionId, collectionName, isUseDocsACL, ACL));
+    public static void updateCollection(String collectionId, String collectionName, boolean isUseDocsACL, ScorocodeACL ACL, boolean notify, final CallbackUpdateCollection callbackUpdateCollection) {
+        Call<ResponseCollection> updateCollectionCall = getScorocodeApi().updateCollection(new RequestUpdateCollection(stateHolder, collectionId, collectionName, isUseDocsACL, ACL, notify));
         updateCollectionCall.enqueue(new Callback<ResponseCollection>() {
             @Override
             public void onResponse(Call<ResponseCollection> call, Response<ResponseCollection> response) {

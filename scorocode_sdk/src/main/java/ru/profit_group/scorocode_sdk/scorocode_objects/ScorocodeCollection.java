@@ -17,6 +17,7 @@ public class ScorocodeCollection {
     private ScorocodeTriggers triggers;
     private List<ScorocodeField> fields;
     private boolean system;
+    private boolean notify;
     private List<Index> indexes;
 
     public ScorocodeCollection() {}
@@ -24,7 +25,7 @@ public class ScorocodeCollection {
     public ScorocodeCollection(
             String id, String name, boolean useDocsACL,
             ScorocodeACL ACL, ScorocodeTriggers triggers,
-            List<ScorocodeField> fields, boolean system, List<Index> indices) {
+            List<ScorocodeField> fields, boolean system, List<Index> indices, boolean notify) {
         this.id = id;
         this.name = name;
         this.useDocsACL = useDocsACL;
@@ -33,6 +34,7 @@ public class ScorocodeCollection {
         this.fields = fields;
         this.system = system;
         this.indexes = indices;
+        this.notify = notify;
     }
 
     @NonNull
@@ -120,6 +122,16 @@ public class ScorocodeCollection {
     @NonNull
     public ScorocodeCollection setIndexes(List<Index> indexes) {
         this.indexes = indexes;
+        return this;
+    }
+
+    public boolean isNotify() {
+        return notify;
+    }
+
+    @NonNull
+    public ScorocodeCollection setNotify(boolean notify) {
+        this.notify = notify;
         return this;
     }
 }
