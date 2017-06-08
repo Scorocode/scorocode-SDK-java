@@ -5,7 +5,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 
 // This is the library version used when deploying the artifact
-version = "1.1.6"
+version = "1.1.7"
 
 android {
     compileSdkVersion 24
@@ -15,7 +15,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "1.1.6"
+        versionName "1.1.7"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -29,6 +29,10 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
     }
 }
 
