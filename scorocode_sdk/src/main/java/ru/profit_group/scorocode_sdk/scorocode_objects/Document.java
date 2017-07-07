@@ -18,8 +18,11 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackRemoveDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocumentById;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUploadFile;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseInsert;
+import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdateById;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Peter Staranchuk on 10/6/16
@@ -63,6 +66,27 @@ public class Document implements Serializable {
         });
     }
 
+
+    public Observable<DocumentInfo> getDocumentById(final String documentId) {
+        return Observable.create(new Observable.OnSubscribe<DocumentInfo>() {
+            @Override
+            public void call(final Subscriber<? super DocumentInfo> subscriber) {
+                getDocumentById(documentId, new CallbackGetDocumentById() {
+                    @Override
+                    public void onDocumentFound(DocumentInfo documentInfo) {
+                        subscriber.onNext(documentInfo);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onDocumentNotFound(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
     public void saveDocument(final CallbackDocumentSaved callbackDocumentSaved) {
         if(documentId == null) {
             ScorocodeSdk.insertDocument(collectionName, documentContent, new CallbackInsert() {
@@ -101,11 +125,74 @@ public class Document implements Serializable {
         }
     }
 
+    public Observable<Void> saveDocument() {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(final Subscriber<? super Void> subscriber) {
+                saveDocument(new CallbackDocumentSaved() {
+                    @Override
+                    public void onDocumentSaved() {
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onDocumentSaveFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
     public void removeDocument(CallbackRemoveDocument callback) {
         Query query = new Query(collectionName);
         query.equalTo("_id", documentId);
 
         ScorocodeSdk.removeDocument(collectionName, query, null, callback);
+    }
+
+    public Observable<ResponseRemove> removeDocument() {
+        return Observable.create(new Observable.OnSubscribe<ResponseRemove>() {
+            @Override
+            public void call(final Subscriber<? super ResponseRemove> subscriber) {
+                removeDocument(new CallbackRemoveDocument() {
+                    @Override
+                    public void onRemoveSucceed(ResponseRemove responseRemove) {
+                        subscriber.onNext(responseRemove);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onRemoveFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
+    public void uploadFile(String fieldName, String fileName, String contenToUploadInBase64, CallbackUploadFile callback) {
+        ScorocodeSdk.uploadFile(collectionName,
+                documentId, fieldName, fileName, contenToUploadInBase64, callback);
+    }
+
+    public Observable<Void> uploadFile(final String fieldName, final String fileName, final String contenToUploadInBase64) {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(final Subscriber<? super Void> subscriber) {
+                uploadFile(fieldName, fileName, contenToUploadInBase64, new CallbackUploadFile() {
+                    @Override
+                    public void onDocumentUploaded() {
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onDocumentUploadFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
     }
 
     public Object getField(String field) {
@@ -116,10 +203,6 @@ public class Document implements Serializable {
         documentContent.put(field, value);
     }
 
-    public void uploadFile(String fieldName, String fileName, String contenToUploadInBase64, CallbackUploadFile callback) {
-        ScorocodeSdk.uploadFile(collectionName,
-                documentId, fieldName, fileName, contenToUploadInBase64, callback);
-    }
 
     public String getFileLink(String fieldName, String fileName) {
         return ScorocodeSdk.getFileLink(collectionName, fieldName, documentId, fileName);
@@ -137,16 +220,53 @@ public class Document implements Serializable {
                 callbackGetFile.onFailed(errorCode, errorMessage);
             }
         });
-    };
+    }
+
+
+    public Observable<String> getFileContent(final String fieldName, final String fileName) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                getFileContent(fieldName, fileName, new CallbackGetFile() {
+                    @Override
+                    public void onSucceed(String fileContent) {
+                        subscriber.onNext(fileContent);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
 
     public void removeFile(String fieldName, String fileName, CallbackDeleteFile callback) {
         ScorocodeSdk.deleteFile(collectionName, documentId, fieldName, fileName, callback);
     }
 
-    public Update updateDocument() {
-        return update;
+    public Observable<Void> removeFile(final String fieldName, final String fileName) {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(final Subscriber<? super Void> subscriber) {
+                removeFile(fieldName, fileName, new CallbackDeleteFile() {
+                    @Override
+                    public void onDocumentDeleted() {
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onDeletionFailed(String errorCodes, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCodes + " " + errorMessage));
+                    }
+                });
+            }
+        });
     }
 
+    @Deprecated
     public static List<DocumentInfo> decodeDocumentsList(String base64data) {
 
         try {
@@ -172,5 +292,9 @@ public class Document implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Update updateDocument() {
+        return update;
     }
 }
