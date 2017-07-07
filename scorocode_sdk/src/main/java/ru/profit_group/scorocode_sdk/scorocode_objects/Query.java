@@ -16,7 +16,12 @@ import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackRemoveDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackUpdateDocument;
+import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
+import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
+import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdate;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Peter Staranchuk on 25/09/16
@@ -40,8 +45,49 @@ public class Query implements Serializable {
         ScorocodeSdk.findDocument(collectionName, this, sort, fieldIds, limit, skip, callback);
     }
 
+    public Observable<List<DocumentInfo>> findDocuments() {
+        return Observable.create(new Observable.OnSubscribe<List<DocumentInfo>>() {
+            @Override
+            public void call(final Subscriber<? super List<DocumentInfo>> subscriber) {
+                ScorocodeSdk.findDocument(collectionName, Query.this, sort, fieldIds, limit, skip, new CallbackFindDocument() {
+                    @Override
+                    public void onDocumentFound(List<DocumentInfo> documentInfos) {
+                        subscriber.onNext(documentInfos);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onDocumentNotFound(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
+
     public void countDocuments(CallbackCountDocument callback) {
         ScorocodeSdk.getDocumentsCount(collectionName, this, callback);
+    }
+
+    public Observable<ResponseCount> countDocuments() {
+        return Observable.create(new Observable.OnSubscribe<ResponseCount>() {
+            @Override
+            public void call(final Subscriber<? super ResponseCount> subscriber) {
+                countDocuments(new CallbackCountDocument() {
+                    @Override
+                    public void onDocumentsCounted(ResponseCount responseCount) {
+                        subscriber.onNext(responseCount);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onCountFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
     }
 
     public void updateDocument(Update update, CallbackUpdateDocument callback) {
@@ -49,8 +95,48 @@ public class Query implements Serializable {
         ScorocodeSdk.updateDocument(collectionName, this, doc, limit, callback);
     }
 
+    public Observable<ResponseUpdate> updateDocument(final Update update) {
+        return Observable.create(new Observable.OnSubscribe<ResponseUpdate>() {
+            @Override
+            public void call(final Subscriber<? super ResponseUpdate> subscriber) {
+                updateDocument(update, new CallbackUpdateDocument() {
+                    @Override
+                    public void onUpdateSucceed(ResponseUpdate responseUpdate) {
+                        subscriber.onNext(responseUpdate);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onUpdateFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
     public void removeDocument(CallbackRemoveDocument callback) {
         ScorocodeSdk.removeDocument(collectionName, this, limit, callback);
+    }
+
+    public Observable<ResponseRemove> removeDocument() {
+        return Observable.create(new Observable.OnSubscribe<ResponseRemove>() {
+            @Override
+            public void call(final Subscriber<? super ResponseRemove> subscriber) {
+                ScorocodeSdk.removeDocument(collectionName, Query.this, limit, new CallbackRemoveDocument() {
+                    @Override
+                    public void onRemoveSucceed(ResponseRemove responseRemove) {
+                        subscriber.onNext(responseRemove);
+                        subscriber.onCompleted();
+                    }
+
+                    @Override
+                    public void onRemoveFailed(String errorCode, String errorMessage) {
+                        subscriber.onError(new Throwable(errorCode + " " + errorMessage));
+                    }
+                });
+            }
+        });
     }
 
     public void setLimit(Integer limit) {
