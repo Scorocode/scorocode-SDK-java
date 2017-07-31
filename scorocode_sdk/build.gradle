@@ -5,7 +5,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 
 // This is the library version used when deploying the artifact
-version = "1.2.0"
+version = "1.2.1"
 
 android {
     compileSdkVersion 24
@@ -15,7 +15,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "1.2.0"
+        versionName "1.2.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -63,6 +63,11 @@ dependencies {
 
     //Apache common codecs
     compile group: 'commons-codec', name: 'commons-codec', version: '1.9'
+
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+// Because RxAndroid releases are few and far between, it is recommended you also
+// explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
 }
 
 def siteUrl = 'https://scorocode.ru/'      // Homepage URL of the library

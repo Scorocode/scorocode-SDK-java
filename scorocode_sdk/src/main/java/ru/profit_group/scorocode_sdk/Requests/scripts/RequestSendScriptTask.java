@@ -15,18 +15,22 @@ public class RequestSendScriptTask {
     private String sess;
     private String script;
     private Object pool;
+    private boolean isRunByPath;
+    private String path;
     private boolean debug;
 
     public RequestSendScriptTask(
             @NonNull ScorocodeCoreInfo stateHolder,
             @NonNull String scriptId,
-            @NonNull Object dataPoolForScript, boolean debug) {
+            @NonNull Object dataPoolForScript, boolean isRunByPath, String path, boolean debug) {
         this.app = stateHolder.getApplicationId();
         this.cli = stateHolder.getClientKey();
         this.acc = stateHolder.getMasterOrScriptKey();
         this.sess = stateHolder.getSessionId();
         this.script = scriptId;
         this.pool = dataPoolForScript;
+        this.isRunByPath = isRunByPath;
+        this.path = path;
         this.debug = debug;
     }
 }

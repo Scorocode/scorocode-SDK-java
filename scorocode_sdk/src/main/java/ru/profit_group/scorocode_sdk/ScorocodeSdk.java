@@ -791,10 +791,10 @@ public class ScorocodeSdk {
      */
     public static void runScript(
             @NonNull String scriptId,
-            @Nullable Object dataPoolForScript, boolean isDebugMode,
+            @Nullable Object dataPoolForScript, boolean isRunByPath, String path, boolean isDebugMode,
             @NonNull final CallbackSendScript callbackSendScript) {
 
-        Call<ResponseCodes> sendScriptTask = getScorocodeApi().sendScriptTask(new RequestSendScriptTask(stateHolder, scriptId, dataPoolForScript, isDebugMode));
+        Call<ResponseCodes> sendScriptTask = getScorocodeApi().sendScriptTask(new RequestSendScriptTask(stateHolder, scriptId, dataPoolForScript, isRunByPath, path, isDebugMode));
         sendScriptTask.enqueue(new Callback<ResponseCodes>() {
             @Override
             public void onResponse(Call<ResponseCodes> call, Response<ResponseCodes> response) {

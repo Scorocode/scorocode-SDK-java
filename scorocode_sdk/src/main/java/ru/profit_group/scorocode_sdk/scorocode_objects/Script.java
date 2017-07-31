@@ -11,6 +11,8 @@ import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 import rx.Observable;
 import rx.Subscriber;
 
+import static android.R.attr.path;
+
 /**
  * Created by Peter Staranchuk on 10/14/16
  */
@@ -28,14 +30,26 @@ public class Script implements Serializable {
     }
 
     public void runScript(String scriptId, Object dataPoolForScript, CallbackSendScript callbackRunScript) {
-        ScorocodeSdk.runScript(scriptId, dataPoolForScript, isDebugMode, callbackRunScript);
+        ScorocodeSdk.runScript(scriptId, dataPoolForScript, false, null, isDebugMode, callbackRunScript);
+    }
+
+    public void runScriptByPath(String path, Object dataPoolForScript, CallbackSendScript callbackRunScript) {
+        ScorocodeSdk.runScript(null, dataPoolForScript, true, path, isDebugMode, callbackRunScript);
     }
 
     public Observable runScript(final String scriptId, final Object dataPoolForScript) {
+        return runScript(scriptId, false, null, dataPoolForScript);
+    }
+
+    public Observable runScriptByPath(final String path, final Object dataPoolForScript) {
+        return runScript(null, true, path, dataPoolForScript);
+    }
+
+    public Observable runScript(final String scriptId, boolean isRunByPath, String path, final Object dataPoolForScript) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(final Subscriber<? super Void> subscriber) {
-                ScorocodeSdk.runScript(scriptId, dataPoolForScript, isDebugMode, new CallbackSendScript() {
+                ScorocodeSdk.runScript(scriptId, dataPoolForScript, false, "", isDebugMode, new CallbackSendScript() {
                     @Override
                     public void onScriptSent() {
                         subscriber.onCompleted();
@@ -51,14 +65,14 @@ public class Script implements Serializable {
     }
 
     public void runScript(String scriptId, CallbackSendScript callbackRunScript) {
-        ScorocodeSdk.runScript(scriptId, null, isDebugMode, callbackRunScript);
+        ScorocodeSdk.runScript(scriptId, null, false, "", isDebugMode, callbackRunScript);
     }
 
     public Observable runScript(final String scriptId) {
         return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
             public void call(final Subscriber<? super Void> subscriber) {
-                ScorocodeSdk.runScript(scriptId, null, isDebugMode, new CallbackSendScript() {
+                ScorocodeSdk.runScript(scriptId, null, false, "", isDebugMode, new CallbackSendScript() {
                     @Override
                     public void onScriptSent() {
                         subscriber.onCompleted();
