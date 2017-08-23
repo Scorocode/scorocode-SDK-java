@@ -326,8 +326,8 @@ public class Query implements Serializable {
 
     public void reset() {
         queryInfo.getInfo().clear();
-        sort = null;
-        fieldIds = null;
+        sort = new SortInfo();
+        fieldIds = new ArrayList<>();
     }
 
     public void ascending(String field) {

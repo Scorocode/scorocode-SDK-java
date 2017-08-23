@@ -8,6 +8,11 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -132,6 +137,8 @@ import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdate;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseUpdateById;
 import ru.profit_group.scorocode_sdk.scorocode_objects.UpdateInfo;
+
+import static android.R.id.message;
 
 /**
  * Created by Peter Staranchuk on 5/10/16
@@ -372,7 +379,12 @@ public class ScorocodeSdk {
                     if(NetworkHelper.isResponseSucceed(responseInsert)) {
                         callbackInsert.onInsertSucceed(responseInsert);
                     } else {
-                        callbackInsert.onInsertFailed(responseInsert.getErrCode(), responseInsert.getErrMsg());
+                        if(responseInsert.getResult() != null) {
+                            callbackInsert.onInsertFailed("",
+                                    errorAndResultToJSON(responseInsert.getErrCode(), responseInsert.getErrMsg(), responseInsert.getResult()));
+                        } else {
+                            callbackInsert.onInsertFailed(responseInsert.getErrCode(), responseInsert.getErrMsg());
+                        }
                     }
                 } else {
                     callbackInsert.onInsertFailed(ERROR_CODE_GENERAL, ERROR_MESSAGE_GENERAL);
@@ -384,6 +396,22 @@ public class ScorocodeSdk {
                 callbackInsert.onInsertFailed(ERROR_CODE_GENERAL, t.getMessage());
             }
         });
+    }
+
+    private static String errorAndResultToJSON(String errorCode, String errorMessage, DocumentInfo result) {
+        Gson gson = new Gson();
+        String json = gson.toJson(result);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(json);
+            jsonObject.put("errCode", errorCode);
+            jsonObject.put("errMsg", errorMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject.toString();
     }
 
     /**
