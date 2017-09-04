@@ -2,6 +2,7 @@ package ru.profit_group.scorocode_sdk.dagger2_modules;
 
 import java.security.cert.CertificateException;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Scope;
 import javax.net.ssl.HostnameVerifier;
@@ -51,6 +52,9 @@ public class RetrofitModule {
     public OkHttpClient okHttpClient(HttpLoggingInterceptor loggingInterceptor, SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
         return new OkHttpClient.Builder()
                 .sslSocketFactory(sslSocketFactory)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
                 .hostnameVerifier(hostnameVerifier)
                 .addInterceptor(loggingInterceptor)
                 .followRedirects(false)
