@@ -132,6 +132,7 @@ public class Document implements Serializable {
                 saveDocument(new CallbackDocumentSaved() {
                     @Override
                     public void onDocumentSaved() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -183,6 +184,7 @@ public class Document implements Serializable {
                 uploadFile(fieldName, fileName, contenToUploadInBase64, new CallbackUploadFile() {
                     @Override
                     public void onDocumentUploaded() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -254,6 +256,7 @@ public class Document implements Serializable {
                 removeFile(fieldName, fileName, new CallbackDeleteFile() {
                     @Override
                     public void onDocumentDeleted() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

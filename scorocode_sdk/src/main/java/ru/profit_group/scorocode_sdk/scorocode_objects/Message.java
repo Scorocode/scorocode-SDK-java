@@ -37,6 +37,7 @@ public class Message implements Serializable {
                 sendPush(messagePush, query, new CallbackSendPush() {
                     @Override
                     public void onPushSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -60,6 +61,7 @@ public class Message implements Serializable {
                 sendPush(messagePush, null, new CallbackSendPush() {
                     @Override
                     public void onPushSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -83,6 +85,7 @@ public class Message implements Serializable {
                 sendSms(messageSms, query, new CallbackSendSms() {
                     @Override
                     public void onSmsSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -106,6 +109,7 @@ public class Message implements Serializable {
                 sendSms(messageSms, null, new CallbackSendSms() {
                     @Override
                     public void onSmsSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

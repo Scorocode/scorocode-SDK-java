@@ -49,6 +49,7 @@ public class Folders {
                 createFolder(pathToFolder, new CallbackCreateNewFolder() {
                     @Override
                     public void onFolderCreated() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -72,6 +73,7 @@ public class Folders {
                 deleteFolder(pathToFolder, new CallbackDeleteFolder() {
                     @Override
                     public void onFolderDeleted() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

@@ -83,6 +83,7 @@ public class User extends Document implements Serializable {
                 logout(new CallbackLogoutUser() {
                     @Override
                     public void onLogoutSucceed() {
+                        subscriber.onNext(true);
                         subscriber.onCompleted();
                     }
 
@@ -106,6 +107,7 @@ public class User extends Document implements Serializable {
                 register(username, email, password, documentContent, new CallbackRegisterUser() {
                     @Override
                     public void onRegisterSucceed() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

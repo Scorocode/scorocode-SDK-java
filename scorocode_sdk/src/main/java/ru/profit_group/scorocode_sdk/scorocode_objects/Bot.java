@@ -99,6 +99,7 @@ public class Bot {
                 ScorocodeSdk.deleteBot(botId, new CallbackDeleteBot() {
                     @Override
                     public void onBotDeleted() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

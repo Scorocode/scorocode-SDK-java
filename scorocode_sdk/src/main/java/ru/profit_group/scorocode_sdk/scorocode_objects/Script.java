@@ -52,6 +52,7 @@ public class Script implements Serializable {
                 ScorocodeSdk.runScript(scriptId, dataPoolForScript, false, "", isDebugMode, new CallbackSendScript() {
                     @Override
                     public void onScriptSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -75,6 +76,7 @@ public class Script implements Serializable {
                 ScorocodeSdk.runScript(scriptId, null, false, "", isDebugMode, new CallbackSendScript() {
                     @Override
                     public void onScriptSent() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 
@@ -171,6 +173,7 @@ public class Script implements Serializable {
                 deleteScript(scriptToDeleteId, new CallbackDeleteScript() {
                     @Override
                     public void onScriptDeleted() {
+                        subscriber.onNext(null);
                         subscriber.onCompleted();
                     }
 

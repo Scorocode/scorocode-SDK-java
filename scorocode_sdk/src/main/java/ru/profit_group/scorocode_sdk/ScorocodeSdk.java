@@ -553,7 +553,7 @@ public class ScorocodeSdk {
                     if(NetworkHelper.isResponseSucceed(responseFindDocument)) {
                         String base64data = response.body().getResult();
                         List<DocumentInfo> documentInfos = Document.decodeDocumentsList(base64data);
-                        if(documentInfos.size() != 0) {
+                        if(documentInfos != null && documentInfos.size() != 0) {
                             callbackFindDocument.onDocumentFound(documentInfos);
                         } else {
                             callbackFindDocument.onDocumentNotFound("0", "Document not found");
@@ -818,7 +818,7 @@ public class ScorocodeSdk {
      * @param callbackSendScript callback which will be invoked after request
      */
     public static void runScript(
-            @NonNull String scriptId,
+            @Nullable String scriptId,
             @Nullable Object dataPoolForScript, boolean isRunByPath, String path, boolean isDebugMode,
             @NonNull final CallbackSendScript callbackSendScript) {
 

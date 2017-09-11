@@ -1,6 +1,7 @@
 package ru.profit_group.scorocode_sdk.Requests.scripts;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import ru.profit_group.scorocode_sdk.scorocode_objects.ScorocodeCoreInfo;
 
@@ -21,8 +22,8 @@ public class RequestSendScriptTask {
 
     public RequestSendScriptTask(
             @NonNull ScorocodeCoreInfo stateHolder,
-            @NonNull String scriptId,
-            @NonNull Object dataPoolForScript, boolean isRunByPath, String path, boolean debug) {
+            @Nullable String scriptId,
+            @Nullable Object dataPoolForScript, boolean isRunByPath, String path, boolean debug) {
         this.app = stateHolder.getApplicationId();
         this.cli = stateHolder.getClientKey();
         this.acc = stateHolder.getMasterOrScriptKey();
