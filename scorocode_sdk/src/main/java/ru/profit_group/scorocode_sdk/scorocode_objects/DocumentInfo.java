@@ -1,9 +1,14 @@
 package ru.profit_group.scorocode_sdk.scorocode_objects;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created by Peter Staranchuk on 10/17/16
@@ -68,6 +73,18 @@ public class DocumentInfo implements Serializable {
         }
 
         return Integer.valueOf(numberString);
+    }
+
+    @Nullable
+    public Date getDate(String key) {
+        String date = getString(key);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public long getLong(String key) {
