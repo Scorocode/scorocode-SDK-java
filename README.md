@@ -94,7 +94,8 @@ query.findDocuments(new CallbackFindDocument() {
       });
 ```
 <br>
-```
+
+```text
 MIT License
 
 Copyright (c) 2016 ProfIT-Ventures LLC
