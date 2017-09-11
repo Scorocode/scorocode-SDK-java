@@ -4,11 +4,14 @@ import android.util.Log;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDocumentSaved;
@@ -41,9 +44,12 @@ public class ScorocodeSdkTestQueryClass {
             ScorocodeSdkStateHolder.setBaseURL("https://94.126.157.202");
         }
 
+    }
+
+    private static void initData() throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(7);
 
-//        removeDocuments(countDownLatch);
+        removeDocuments(countDownLatch);
         createDocForEqualTest(countDownLatch);
         createDocForNotEqualTest(countDownLatch);
         createDocForContainsAllTest(countDownLatch);
@@ -54,7 +60,6 @@ public class ScorocodeSdkTestQueryClass {
         createDocForRegexTest(countDownLatch, "aBC");
 
         countDownLatch.await();
-
     }
 
     private static void removeDocuments(final CountDownLatch countDownLatch) {
@@ -500,7 +505,7 @@ public class ScorocodeSdkTestQueryClass {
     }
 
     @Test
-    public void test18RawTest() throws Exception {
+    public void test_18RawTest() throws Exception {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Query query = new Query("querytest");
         query.raw("{\"_id\": {\"$eq\": \"L8UjiQZRkj\"}}");
@@ -517,6 +522,27 @@ public class ScorocodeSdkTestQueryClass {
                 Log.d("","");
                 countDownLatch.countDown();
 
+            }
+        });
+        countDownLatch.await();
+    }
+
+    @Test
+    public void test_19ComplexQuery() throws Exception {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        Query query = new Query(TEST_COLLECTION_NAME);
+        query.equalTo(TEXT_FIELD_1, "A");
+        query.equalTo(NUMBER_FIELD_1, 105);
+
+        query.findDocuments(new CallbackFindDocument() {
+            @Override
+            public void onDocumentFound(List<DocumentInfo> documentInfos) {
+                Log.d("","");
+            }
+
+            @Override
+            public void onDocumentNotFound(String errorCode, String errorMessage) {
+                Log.d("","");
             }
         });
 
