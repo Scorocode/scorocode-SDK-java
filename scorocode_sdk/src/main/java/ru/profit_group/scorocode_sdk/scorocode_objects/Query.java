@@ -6,11 +6,13 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
@@ -34,11 +36,13 @@ public class Query implements Serializable {
     private SortInfo sort;
     private List<String> fieldIds;
     private QueryInfo queryInfo;
+    private QueryBuilder queryBuilder;
 
     public Query(String collectionName) {
         this.collectionName = collectionName;
         this.sort = new SortInfo();
         this.queryInfo = new QueryInfo();
+        this.queryBuilder = QueryBuilder.start();
     }
 
     public void findDocuments(CallbackFindDocument callback) {
@@ -154,57 +158,57 @@ public class Query implements Serializable {
     }
 
     public Query equalTo(String field, Object value) {
-        addQueryRule(field, "$eq", value);
+        queryBuilder.put(field).is(value);
         return this;
     }
 
     public Query notEqualTo(String field, Object value) {
-        addQueryRule(field, "$ne", value);
+        queryBuilder.put(field).notEquals(value);
         return this;
     }
 
     public Query containedIn(String field, List<Object> values) {
-        addQueryRule(field, "$in", values);
+        queryBuilder.put(field).in(values);
         return this;
     }
 
     public Query containsAll(String field, List<Object> values) {
-            addQueryRule(field, "$all", values);
+        queryBuilder.put(field).all(values);
         return this;
     }
 
     public Query notContainedIn(String field, List<Object> values) {
-        addQueryRule(field, "$nin", values);
+        queryBuilder.put(field).notIn(values);
         return this;
     }
 
     public Query greaterThan(String field, Object value) {
-        addQueryRule(field, "$gt", value);
+        queryBuilder.put(field).greaterThan(value);
         return this;
     }
 
     public Query greaterThenOrEqualTo(String field, Object value) {
-        addQueryRule(field, "$gte", value);
+        queryBuilder.put(field).greaterThanEquals(value);
         return this;
     }
 
     public Query lessThan(String field, Object value) {
-        addQueryRule(field, "$lt", value);
+        queryBuilder.put(field).lessThan(value);
         return this;
     }
 
     public Query lessThanOrEqualTo(String field, Object value) {
-        addQueryRule(field, "$lte", value);
+        queryBuilder.put(field).lessThanEquals(value);
         return this;
     }
 
     public Query exists(String field) {
-        addQueryRule(field, "$exists", true);
+        queryBuilder.put(field).exists(true);
         return this;
     }
 
     public Query doesNotExist(String field) {
-        addQueryRule(field, "$exists", false);
+        queryBuilder.put(field).exists(false);
         return this;
     }
 
@@ -247,56 +251,17 @@ public class Query implements Serializable {
     }
 
     public Query and(String field, Query query) {
-        try {
-            List<HashMap<String, HashMap<String, Object>>> list = new ArrayList<>();
-            HashMap<String, Object> queryParam1 = (HashMap<String, Object>) query.getQueryInfo().getInfo().get(field);
-            HashMap<String, Object> queryParam2 = (HashMap<String, Object>) queryInfo.getInfo().get(field);
-
-            HashMap<String, HashMap<String, Object>> parameter1 = new HashMap<>();
-            parameter1.put(field, queryParam1);
-
-            HashMap<String, HashMap<String, Object>> parameter2 = new HashMap<>();
-            parameter2.put(field, queryParam2);
-
-            list.add(parameter1);
-            list.add(parameter2);
-
-            queryInfo.getInfo().remove(field);
-            queryInfo.getInfo().put("$and", list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        queryBuilder.put(field).and(query.getDBObject());
         return this;
+    }
+
+    private DBObject getDBObject() {
+        return queryBuilder.get();
     }
 
     public Query or(String field, Query query) {
-        try {
-            List<HashMap<String, HashMap<String, Object>>> list = new ArrayList<>();
-            HashMap<String, Object> queryParam1 = (HashMap<String, Object>) query.getQueryInfo().getInfo().get(field);
-            HashMap<String, Object> queryParam2 = (HashMap<String, Object>) queryInfo.getInfo().get(field);
-
-            HashMap<String, HashMap<String, Object>> parameter1 = new HashMap<>();
-            parameter1.put(field, queryParam1);
-
-            HashMap<String, HashMap<String, Object>> parameter2 = new HashMap<>();
-            parameter2.put(field, queryParam2);
-
-            list.add(parameter1);
-            list.add(parameter2);
-
-            queryInfo.getInfo().remove(field);
-            queryInfo.getInfo().put("$or", list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        queryBuilder.put(field).or(query.getDBObject());
         return this;
-    }
-
-    @NonNull
-    private static HashMap<String, Object> getRecord(Object value, String operator) {
-        HashMap<String, Object> record = new HashMap<>();
-        record.put(operator, value);
-        return record;
     }
 
     public void raw(String json) {
@@ -306,21 +271,12 @@ public class Query implements Serializable {
         queryInfo.getInfo().putAll(map);
     }
 
-    private void addQueryRule(String field, String operation, Object value) {
-        HashMap<String, Object> element = (HashMap<String, Object>) queryInfo.getInfo().get(field);
-
-        if(queryInfo.getInfo().containsKey(field)) {
-            element.put(operation, value);
-        } else {
-            queryInfo.getInfo().put(field, getRecord(value, operation));
-        }
-    }
-
     @NonNull
     public QueryInfo getQueryInfo() {
         if(queryInfo == null) {
             return new QueryInfo();
         }
+        queryInfo.getInfo().putAll(queryBuilder.get().toMap());
         return queryInfo;
     }
 
